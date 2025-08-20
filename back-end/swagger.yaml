@@ -1,0 +1,686 @@
+openapi: 3.0.3
+info:
+  title: Driving School Pupil Management API
+  description: |
+    REST API for managing pupil registration data for a driving school.
+    This API provides comprehensive CRUD operations for pupil records including
+    personal details, contact information, addresses, and driving-related information.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@drivingschool.com
+  license:
+    name: ISC
+    
+servers:
+  - url: http://localhost:6006/api
+    description: Development server
+  - url: https://api.drivingschool.com/api
+    description: Production server
+
+tags:
+  - name: Pupils
+    description: Operations related to pupil management
+
+paths:
+  /pupils:
+    get:
+      tags:
+        - Pupils
+      summary: Get all pupils
+      description: Retrieve a list of all registered pupils, sorted by creation date (newest first)
+      operationId: getAllPupils
+      responses:
+        '200':
+          description: Successfully retrieved pupils
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Retrieved 25 pupils"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pupil'
+                  count:
+                    type: integer
+                    example: 25
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    post:
+      tags:
+        - Pupils
+      summary: Create a new pupil
+      description: Create a new pupil record with personal details, contact information, and driving-related data
+      operationId: createPupil
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PupilCreateRequest'
+            examples:
+              basic_pupil:
+                summary: Basic pupil creation
+                value:
+                  forename: "John"
+                  surname: "Smith"
+                  dob: "1995-06-15"
+                  gender: "Male"
+                  email: "john.smith@email.com"
+                  home:
+                    mobile: "07123456789"
+                  pickupAddress:
+                    postcode: "SW1A 1AA"
+                    houseNo: "10"
+                    address: "Downing Street, Westminster"
+              complete_pupil:
+                summary: Complete pupil with all details
+                value:
+                  title: "Mr"
+                  forename: "John"
+                  surname: "Smith"
+                  email: "john.smith@email.com"
+                  dob: "1995-06-15"
+                  gender: "Male"
+                  home:
+                    mobile: "07123456789"
+                    work: "02012345678"
+                  allowTextMessaging: true
+                  pickupAddress:
+                    postcode: "SW1A 1AA"
+                    houseNo: "10"
+                    address: "Downing Street, Westminster"
+                  homeAddress:
+                    postcode: "SW1A 1AA"
+                    houseNo: "10"
+                    address: "Downing Street, Westminster"
+                  pupilType: "Manual Gearbox"
+                  licenseType: "Provisional"
+                  licenseNo: "SMITH123456AB9CD"
+                  passedTheory: true
+                  certNo: "THEORY123456"
+                  usualAvailability: "Weekends and evenings"
+                  notes: "Prefers morning lessons"
+      responses:
+        '201':
+          description: Pupil created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Pupil created successfully"
+                  data:
+                    $ref: '#/components/schemas/Pupil'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /pupils/{id}:
+    get:
+      tags:
+        - Pupils
+      summary: Get pupil by ID
+      description: Retrieve a specific pupil record by their unique ID
+      operationId: getPupilById
+      parameters:
+        - $ref: '#/components/parameters/PupilId'
+      responses:
+        '200':
+          description: Pupil retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Pupil retrieved successfully"
+                  data:
+                    $ref: '#/components/schemas/Pupil'
+        '400':
+          $ref: '#/components/responses/InvalidObjectId'
+        '404':
+          $ref: '#/components/responses/PupilNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    put:
+      tags:
+        - Pupils
+      summary: Update pupil
+      description: Update an existing pupil record with new information
+      operationId: updatePupil
+      parameters:
+        - $ref: '#/components/parameters/PupilId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PupilUpdateRequest'
+            examples:
+              update_contact:
+                summary: Update contact information
+                value:
+                  email: "newemail@example.com"
+                  home:
+                    mobile: "07987654321"
+                  allowTextMessaging: true
+              update_progress:
+                summary: Update driving progress
+                value:
+                  passedTheory: true
+                  certNo: "THEORY789012"
+                  datePassed: "2024-01-15"
+                  licenseType: "Provisional"
+      responses:
+        '200':
+          description: Pupil updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Pupil updated successfully"
+                  data:
+                    $ref: '#/components/schemas/Pupil'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/PupilNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    
+    delete:
+      tags:
+        - Pupils
+      summary: Delete pupil
+      description: Delete a pupil record permanently from the system
+      operationId: deletePupil
+      parameters:
+        - $ref: '#/components/parameters/PupilId'
+      responses:
+        '200':
+          description: Pupil deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Pupil deleted successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "507f1f77bcf86cd799439011"
+                      fullName:
+                        type: string
+                        example: "John Smith"
+                      deletedAt:
+                        type: string
+                        format: date-time
+                        example: "2024-01-15T10:30:00.000Z"
+        '400':
+          $ref: '#/components/responses/InvalidObjectId'
+        '404':
+          $ref: '#/components/responses/PupilNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  parameters:
+    PupilId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the pupil (MongoDB ObjectId)
+      schema:
+        type: string
+        pattern: '^[0-9a-fA-F]{24}$'
+        example: "507f1f77bcf86cd799439011"
+
+  schemas:
+    Address:
+      type: object
+      properties:
+        postcode:
+          type: string
+          pattern: '^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$'
+          example: "SW1A 1AA"
+          description: UK postcode format
+        houseNo:
+          type: string
+          example: "10"
+          description: House number or name
+        address:
+          type: string
+          example: "Downing Street, Westminster"
+          description: Full address line
+    
+    ContactInfo:
+      type: object
+      properties:
+        mobile:
+          type: string
+          pattern: '^[\d\s\-\+\(\)]+$'
+          example: "07123456789"
+          description: Mobile phone number
+        work:
+          type: string
+          pattern: '^[\d\s\-\+\(\)]+$'
+          example: "02012345678"
+          description: Work phone number
+    
+    PupilCreateRequest:
+      type: object
+      required:
+        - forename
+        - surname
+        - dob
+        - gender
+      properties:
+        title:
+          type: string
+          enum: [Mr, Mrs, Miss, Ms, Dr]
+          example: "Mr"
+        forename:
+          type: string
+          maxLength: 50
+          example: "John"
+          description: First name (required)
+        surname:
+          type: string
+          maxLength: 50
+          example: "Smith"
+          description: Last name (required)
+        email:
+          type: string
+          format: email
+          example: "john.smith@email.com"
+          description: Email address (must be unique if provided)
+        dob:
+          type: string
+          format: date
+          example: "1995-06-15"
+          description: Date of birth (required, cannot be in future)
+        gender:
+          type: string
+          enum: [Male, Female, Other]
+          example: "Male"
+          description: Gender (required)
+        home:
+          $ref: '#/components/schemas/ContactInfo'
+        allowTextMessaging:
+          type: boolean
+          default: false
+          example: true
+        pickupAddress:
+          $ref: '#/components/schemas/Address'
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+        pupilType:
+          type: string
+          enum: [Manual Gearbox, Automatic, Motorcycle, HGV]
+          default: "Manual Gearbox"
+          example: "Manual Gearbox"
+        pupilOwner:
+          type: string
+          default: "Instructor"
+          example: "Instructor"
+        allocatedTo:
+          type: string
+          example: "John Instructor"
+          description: Instructor assigned to this pupil
+        licenseType:
+          type: string
+          enum: [No License, Provisional, Full License]
+          default: "No License"
+          example: "Provisional"
+        licenseNo:
+          type: string
+          example: "SMITH123456AB9CD"
+          description: Driving license number
+        passedTheory:
+          type: boolean
+          default: false
+          example: true
+        certNo:
+          type: string
+          example: "THEORY123456"
+          description: Theory test certificate number
+        datePassed:
+          type: string
+          format: date
+          example: "2024-01-15"
+          description: Date theory test was passed
+        fott:
+          type: boolean
+          default: false
+          description: First time theory test
+        fullAccess:
+          type: boolean
+          default: false
+        usualAvailability:
+          type: string
+          example: "Weekends and evenings"
+          description: When the pupil is usually available for lessons
+        discount:
+          type: string
+          default: "0%"
+          example: "10%"
+        defaultProduct:
+          type: string
+          example: "Standard Lesson"
+        onlinePassword:
+          type: string
+          example: "securepassword123"
+          description: Password for online access
+        pupilCaution:
+          type: boolean
+          default: false
+        notes:
+          type: string
+          maxLength: 1000
+          example: "Prefers morning lessons. Nervous driver."
+          description: Additional notes about the pupil
+    
+    PupilUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          enum: [Mr, Mrs, Miss, Ms, Dr]
+        forename:
+          type: string
+          maxLength: 50
+        surname:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+        dob:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [Male, Female, Other]
+        home:
+          $ref: '#/components/schemas/ContactInfo'
+        allowTextMessaging:
+          type: boolean
+        pickupAddress:
+          $ref: '#/components/schemas/Address'
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+        pupilType:
+          type: string
+          enum: [Manual Gearbox, Automatic, Motorcycle, HGV]
+        pupilOwner:
+          type: string
+        allocatedTo:
+          type: string
+        licenseType:
+          type: string
+          enum: [No License, Provisional, Full License]
+        licenseNo:
+          type: string
+        passedTheory:
+          type: boolean
+        certNo:
+          type: string
+        datePassed:
+          type: string
+          format: date
+        fott:
+          type: boolean
+        fullAccess:
+          type: boolean
+        usualAvailability:
+          type: string
+        discount:
+          type: string
+        defaultProduct:
+          type: string
+        onlinePassword:
+          type: string
+        pupilCaution:
+          type: boolean
+        notes:
+          type: string
+          maxLength: 1000
+    
+    Pupil:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "507f1f77bcf86cd799439011"
+          description: Unique MongoDB ObjectId
+        title:
+          type: string
+          enum: [Mr, Mrs, Miss, Ms, Dr]
+          example: "Mr"
+        forename:
+          type: string
+          example: "John"
+        surname:
+          type: string
+          example: "Smith"
+        email:
+          type: string
+          format: email
+          example: "john.smith@email.com"
+        dob:
+          type: string
+          format: date-time
+          example: "1995-06-15T00:00:00.000Z"
+        gender:
+          type: string
+          enum: [Male, Female, Other]
+          example: "Male"
+        home:
+          $ref: '#/components/schemas/ContactInfo'
+        allowTextMessaging:
+          type: boolean
+          example: true
+        pickupAddress:
+          $ref: '#/components/schemas/Address'
+        homeAddress:
+          $ref: '#/components/schemas/Address'
+        pupilType:
+          type: string
+          enum: [Manual Gearbox, Automatic, Motorcycle, HGV]
+          example: "Manual Gearbox"
+        pupilOwner:
+          type: string
+          example: "Instructor"
+        allocatedTo:
+          type: string
+          example: "John Instructor"
+        licenseType:
+          type: string
+          enum: [No License, Provisional, Full License]
+          example: "Provisional"
+        licenseNo:
+          type: string
+          example: "SMITH123456AB9CD"
+        passedTheory:
+          type: boolean
+          example: true
+        certNo:
+          type: string
+          example: "THEORY123456"
+        datePassed:
+          type: string
+          format: date-time
+          example: "2024-01-15T00:00:00.000Z"
+        fott:
+          type: boolean
+          example: false
+        fullAccess:
+          type: boolean
+          example: false
+        usualAvailability:
+          type: string
+          example: "Weekends and evenings"
+        discount:
+          type: string
+          example: "10%"
+        defaultProduct:
+          type: string
+          example: "Standard Lesson"
+        pupilCaution:
+          type: boolean
+          example: false
+        notes:
+          type: string
+          example: "Prefers morning lessons. Nervous driver."
+        fullName:
+          type: string
+          example: "John Smith"
+          description: Virtual field combining forename and surname
+        age:
+          type: integer
+          example: 28
+          description: Virtual field calculated from date of birth
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-01-01T10:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-01-15T14:30:00.000Z"
+    
+    ErrorDetail:
+      type: object
+      properties:
+        field:
+          type: string
+          example: "email"
+        message:
+          type: string
+          example: "Invalid email format"
+    
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Validation failed"
+            type:
+              type: string
+              example: "VALIDATION_ERROR"
+            details:
+              type: array
+              items:
+                $ref: '#/components/schemas/ErrorDetail'
+
+  responses:
+    ValidationError:
+      description: Validation error occurred
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            validation_error:
+              summary: Field validation error
+              value:
+                success: false
+                error:
+                  message: "Database validation failed"
+                  type: "DATABASE_VALIDATION_ERROR"
+                  details:
+                    - field: "email"
+                      message: "Invalid email format"
+                    - field: "forename"
+                      message: "Forename is required"
+            duplicate_error:
+              summary: Duplicate email error
+              value:
+                success: false
+                error:
+                  message: "Email already exists"
+                  type: "DUPLICATE_ERROR"
+                  details:
+                    - field: "email"
+                      message: "A pupil with this email already exists"
+    
+    InvalidObjectId:
+      description: Invalid MongoDB ObjectId format
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: "Invalid pupil ID format"
+              type: "INVALID_OBJECT_ID"
+              details:
+                - field: "id"
+                  message: "Invalid MongoDB ObjectId format"
+    
+    PupilNotFound:
+      description: Pupil not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: "Pupil not found"
+              type: "NOT_FOUND"
+              details:
+                - field: "id"
+                  message: "No pupil found with ID: 507f1f77bcf86cd799439011"
+    
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              message: "Failed to retrieve pupils"
+              type: "DATABASE_ERROR"
