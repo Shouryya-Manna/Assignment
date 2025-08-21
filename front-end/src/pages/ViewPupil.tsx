@@ -1,130 +1,345 @@
 import React from "react";
-import { useSelectedPupil } from "@/context/SelectedRowContext";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Calendar, Mail, Phone, Home, FileText } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { usePupil } from "@/api/Queries";
 import type { Pupil } from "@/schemas/schema";
-import { Separator } from "@radix-ui/react-select";
 
-const PupilDetails: React.FC = () => {
-  const { selectedPupil, clearSelectedPupil } = useSelectedPupil();
-  const navigate = useNavigate();
+// Shadcn UI & Lucide React Imports
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  ArrowLeft,
+  Siren,
+  User,
+  Mail,
+  Calendar,
+  Hash,
+  Home,
+  Phone,
+  Car,
+  FileText,
+  BadgeCent,
+  KeyRound,
+  BookOpen,
+  CheckCircle2,
+  XCircle,
+  Percent,
+  ShoppingBag,
+  Info,
+  UserCheck,
+  Users,
+  ShieldQuestion,
+} from "lucide-react";
 
-  if (!selectedPupil) {
-    return <div className="text-red-500">No pupil selected!</div>;
-  }
-
-  const pupil: Pupil = selectedPupil;
-
-  const display = (val?: string | boolean | null) =>
-    val === undefined || val === null ? "-" : String(val);
-
-  const FieldRow = ({ label, value, icon }: { label: string; value?: string | boolean | null; icon?: React.ReactNode }) => (
-    <div className="flex justify-between items-center w-full border-b border-muted-foreground/20 py-1">
-      <div className="flex items-center space-x-1 font-medium text-muted-foreground">
-        {icon} <span>{label}</span>
-      </div>
-      <div className="text-right">{display(value)}</div>
-    </div>
-  );
+// Reusable component for displaying a detail item with an icon
+const DetailItem = ({
+  icon: Icon,
+  label,
+  value,
+  children,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value?: string | boolean | null | number;
+  children?: React.ReactNode;
+}) => {
+  const displayValue =
+    value === undefined || value === null || value === "" ? "-" : String(value);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 space-y-6">
-      {/* Personal Details */}
-      <Card className="w-full max-w-4xl shadow-lg">
-        <CardHeader>
-          <CardTitle>Personal Details</CardTitle>
-          <CardDescription>Basic information about the pupil</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col space-y-2">
-          <FieldRow label="ID" value={pupil._id} />
-          <FieldRow label="Title" value={pupil.title} />
-          <FieldRow label="Forename" value={pupil.forename} />
-          <FieldRow label="Surname" value={pupil.surname} />
-          <FieldRow label="Email" value={pupil.email} icon={<Mail size={16} />} />
-          <FieldRow label="DOB" value={pupil.dob ? new Date(pupil.dob).toLocaleDateString("en-GB") : "-"} icon={<Calendar size={16} />} />
-          <FieldRow label="Gender" value={pupil.gender} />
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      {/* Contact Details */}
-      <Card className="w-full max-w-4xl shadow-lg">
-        <CardHeader>
-          <CardTitle>Contact Details</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col space-y-2">
-          <FieldRow label="Mobile" value={pupil.home?.mobile} icon={<Phone size={16} />} />
-          <FieldRow label="Work" value={pupil.home?.work} icon={<Phone size={16} />} />
-          <FieldRow label="Allow Text Messaging" value={pupil.allowTextMessaging} />
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      {/* Addresses */}
-      <Card className="w-full max-w-4xl shadow-lg">
-        <CardHeader>
-          <CardTitle>Addresses</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col space-y-2">
-          <FieldRow label="Pickup Address" value={pupil.pickupAddress?.address} icon={<Home size={16} />} />
-          <FieldRow label="House No" value={pupil.pickupAddress?.houseNo} />
-          <FieldRow label="Postcode" value={pupil.pickupAddress?.postcode} />
-          <FieldRow label="Home Address" value={pupil.homeAddress?.address} icon={<Home size={16} />} />
-          <FieldRow label="House No" value={pupil.homeAddress?.houseNo} />
-          <FieldRow label="Postcode" value={pupil.homeAddress?.postcode} />
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      {/* Extra Details */}
-      <Card className="w-full max-w-4xl shadow-lg">
-        <CardHeader>
-          <CardTitle>Extra Details</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col space-y-2">
-          <FieldRow label="Pupil Type" value={pupil.pupilType} />
-          <FieldRow label="Pupil Owner" value={pupil.pupilOwner} />
-          <FieldRow label="Allocated To" value={pupil.allocatedTo} />
-          <FieldRow label="License Type" value={pupil.licenseType} />
-          <FieldRow label="License No" value={pupil.licenseNo} />
-          <FieldRow label="Passed Theory" value={pupil.passedTheory} />
-          <FieldRow label="Cert No" value={pupil.certNo} />
-          <FieldRow label="Date Passed" value={pupil.datePassed ? new Date(pupil.datePassed).toLocaleDateString("en-GB") : "-"} icon={<Calendar size={16} />} />
-          <FieldRow label="FOTT" value={pupil.fott} />
-          <FieldRow label="Full Access" value={pupil.fullAccess} />
-          <FieldRow label="Usual Availability" value={pupil.usualAvailability} />
-          <FieldRow label="Discount" value={pupil.discount} />
-          <FieldRow label="Default Product" value={pupil.defaultProduct} />
-          <FieldRow label="Online Password" value={pupil.onlinePassword} />
-          <FieldRow label="Pupil Caution" value={pupil.pupilCaution} />
-          <div className="flex items-center space-x-2 border-b border-muted-foreground/20 py-1">
-            <FileText size={16} />
-            <span className="font-medium text-muted-foreground">Notes:</span>
-            <span className="ml-auto">{display(pupil.notes)}</span>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Button
-        onClick={() => {
-          clearSelectedPupil();
-          navigate("/pupils");
-        }}
-      >
-        Back
-      </Button>
+    <div className="flex flex-col space-y-1">
+      <div className="flex items-center text-sm text-muted-foreground">
+        <Icon className="h-4 w-4 mr-2" />
+        {label}
+      </div>
+      <div className="text-md font-medium pl-6">{children || displayValue}</div>
     </div>
+  );
+};
+
+const PupilDetails: React.FC = () => {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { data: pupil, isLoading, isError, error } = usePupil(id!);
+
+  if (isLoading) {
+    return <div className="p-8 text-center">Loading pupil details...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div className="p-8 text-center text-red-500">Error: {error.message}</div>
+    );
+  }
+
+  if (!pupil) {
+    return <div className="p-8 text-center">Pupil not found.</div>;
+  }
+
+  // Helper to format dates consistently
+  const formatDate = (dateString?: string) => {
+    return dateString ? new Date(dateString).toLocaleDateString("en-GB") : "-";
+  };
+
+  const pupilInitials = `${pupil.forename?.[0] || ""}${
+    pupil.surname?.[0] || ""
+  }`.toUpperCase();
+
+  return (
+    <main className="p-4 md:p-8 space-y-6 bg-muted/20 min-h-screen">
+      {/* --- HEADER --- */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-16 w-16">
+            <AvatarImage />
+            <AvatarFallback className="text-2xl">
+              {pupilInitials}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {pupil.forename} {pupil.surname}
+            </h1>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <span>{pupil.email || "No email provided"}</span>
+            </div>
+          </div>
+        </div>
+        <Button variant="outline" onClick={() => navigate("/pupils")}>
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Pupils
+        </Button>
+      </div>
+
+      {/* --- MAIN CONTENT GRID --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* --- LEFT COLUMN: KEY INFO --- */}
+        <div className="lg:col-span-1 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Key Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <DetailItem icon={Info} label="Pupil Type">
+                <Badge variant="secondary">{pupil.pupilType || "-"}</Badge>
+              </DetailItem>
+              <DetailItem icon={Car} label="License Type">
+                <Badge>{pupil.licenseType || "-"}</Badge>
+              </DetailItem>
+              <DetailItem icon={BookOpen} label="Theory Status">
+                {pupil.passedTheory ? (
+                  <Badge variant="success">
+                    <CheckCircle2 className="h-4 w-4 mr-1" /> Passed
+                  </Badge>
+                ) : (
+                  <Badge variant="destructive">
+                    <XCircle className="h-4 w-4 mr-1" /> Not Passed
+                  </Badge>
+                )}
+              </DetailItem>
+              <DetailItem
+                icon={UserCheck}
+                label="Pupil Owner"
+                value={pupil.pupilOwner}
+              />
+              <DetailItem
+                icon={Users}
+                label="Allocated To"
+                value={pupil.allocatedTo}
+              />
+            </CardContent>
+          </Card>
+          {pupil.pupilCaution && (
+            <Alert variant="destructive">
+              <Siren className="h-4 w-4" />
+              <AlertTitle>Pupil Caution</AlertTitle>
+              <AlertDescription>{pupil.pupilCaution}</AlertDescription>
+            </Alert>
+          )}
+        </div>
+
+        {/* --- RIGHT COLUMN: TABS --- */}
+        <div className="lg:col-span-2">
+          <Tabs defaultValue="personal">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="personal">Personal</TabsTrigger>
+              <TabsTrigger value="contact">Contact & Address</TabsTrigger>
+              <TabsTrigger value="license">License & Notes</TabsTrigger>
+            </TabsList>
+
+            {/* PERSONAL TAB */}
+            <TabsContent value="personal">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Personal Details</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                  <DetailItem icon={Hash} label="Pupil ID" value={pupil._id} />
+                  <DetailItem icon={User} label="Title" value={pupil.title} />
+                  <DetailItem
+                    icon={User}
+                    label="Forename"
+                    value={pupil.forename}
+                  />
+                  <DetailItem
+                    icon={User}
+                    label="Surname"
+                    value={pupil.surname}
+                  />
+                  <DetailItem
+                    icon={Calendar}
+                    label="Date of Birth"
+                    value={formatDate(pupil.dob)}
+                  />
+                  <DetailItem
+                    icon={Users}
+                    label="Gender"
+                    value={pupil.gender}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* CONTACT & ADDRESS TAB */}
+            <TabsContent value="contact">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contact & Address</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <DetailItem
+                      icon={Phone}
+                      label="Mobile Phone"
+                      value={pupil.home?.mobile}
+                    />
+                    <DetailItem
+                      icon={Phone}
+                      label="Work Phone"
+                      value={pupil.home?.work}
+                    />
+                  </div>
+                  <hr />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div>
+                      <h3 className="font-semibold mb-2">Pickup Address</h3>
+                      <div className="space-y-4 pl-2 border-l-2">
+                        <DetailItem
+                          icon={Home}
+                          label="Address"
+                          value={pupil.pickupAddress?.address}
+                        />
+                        <DetailItem
+                          icon={Hash}
+                          label="House No"
+                          value={pupil.pickupAddress?.houseNo}
+                        />
+                        <DetailItem
+                          icon={Mail}
+                          label="Postcode"
+                          value={pupil.pickupAddress?.postcode}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Home Address</h3>
+                      <div className="space-y-4 pl-2 border-l-2">
+                        <DetailItem
+                          icon={Home}
+                          label="Address"
+                          value={pupil.homeAddress?.address}
+                        />
+                        <DetailItem
+                          icon={Hash}
+                          label="House No"
+                          value={pupil.homeAddress?.houseNo}
+                        />
+                        <DetailItem
+                          icon={Mail}
+                          label="Postcode"
+                          value={pupil.homeAddress?.postcode}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* LICENSE & NOTES TAB */}
+            <TabsContent value="license">
+              <Card>
+                <CardHeader>
+                  <CardTitle>License & Other Details</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                  <DetailItem
+                    icon={Car}
+                    label="License No"
+                    value={pupil.licenseNo}
+                  />
+                  <DetailItem
+                    icon={BadgeCent}
+                    label="Theory Cert No"
+                    value={pupil.certNo}
+                  />
+                  <DetailItem
+                    icon={Calendar}
+                    label="Date Theory Passed"
+                    value={
+                      pupil.datePassed
+                        ? new Date(pupil.datePassed).toLocaleDateString("en-GB")
+                        : "-"
+                    }
+                  />
+                  <DetailItem
+                    icon={ShieldQuestion}
+                    label="FOTT"
+                    value={pupil.fott}
+                  />
+                  <DetailItem
+                    icon={KeyRound}
+                    label="Full Access"
+                    value={pupil.fullAccess ? "Yes" : "No"}
+                  />
+                  <DetailItem
+                    icon={Percent}
+                    label="Discount"
+                    value={pupil.discount}
+                  />
+                  <DetailItem
+                    icon={ShoppingBag}
+                    label="Default Product"
+                    value={pupil.defaultProduct}
+                  />
+                  <DetailItem
+                    icon={KeyRound}
+                    label="Online Password"
+                    value={pupil.onlinePassword}
+                  />
+                  <DetailItem
+                    icon={FileText}
+                    label="Usual Availability"
+                    value={pupil.usualAvailability}
+                  />
+                  <div className="md:col-span-2">
+                    <DetailItem
+                      icon={FileText}
+                      label="Notes"
+                      value={pupil.notes}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </main>
   );
 };
 

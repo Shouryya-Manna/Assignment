@@ -25,3 +25,13 @@ export const deletePupil = async (_id: string) => {
   }
   return res.data;
 };
+
+export const fetchPupilById = async (id: string): Promise<Pupil> => {
+  const response = await api.get(`/pupils/${id}`);
+  
+  if (response.data.success) {
+    return response.data.data as Pupil; // Type assertion
+  } else {
+    throw new Error(response.data.error?.message || "Failed to fetch pupil");
+  }
+};

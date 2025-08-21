@@ -133,7 +133,6 @@ export const columns: ColumnDef<Pupil>[] = [
       const [dialogOpen, setDialogOpen] = useState(false);
       const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
       const navigate = useNavigate();
-      const { setSelectedPupil } = useSelectedPupil();
       const deletePupilMutation = useDeletePupil();
 
       return (
@@ -147,9 +146,9 @@ export const columns: ColumnDef<Pupil>[] = [
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
+               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedPupil(row.original);
+                  // SIMPLIFIED: Just navigate. The detail page will handle the fetching.
                   navigate(`/pupils/${row.original._id}`);
                 }}
               >
@@ -158,8 +157,9 @@ export const columns: ColumnDef<Pupil>[] = [
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  setSelectedPupil(row.original);
-                  navigate(`/pupils/${row.original._id}`);
+                  // You might still use context for an Edit form to pre-fill data
+                  // setSelectedPupil(row.original); 
+                  navigate(`/pupils/edit/${row.original._id}`); // Example edit route
                 }}
               >
                 Edit

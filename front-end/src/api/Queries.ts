@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllPupilInfo } from "./Api";
+import { fetchAllPupilInfo, fetchPupilById } from "./Api";
+import type { Pupil } from "@/schemas/schema";
 
 export function useShowAllPupilsQuery() {
   const {
@@ -21,3 +22,13 @@ export function useShowAllPupilsQuery() {
     refetch,
   };
 }
+
+
+export const usePupil = (id: string) => {
+  return useQuery<Pupil, Error>({
+    queryKey: ["pupil", id],
+    queryFn: () => fetchPupilById(id),
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000, 
+  });
+};
