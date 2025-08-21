@@ -3,14 +3,13 @@ import { createPupilInfo } from "./Api";
 import type { Pupil } from "@/schemas/schema";
 
 export function usePupilMutation() {
-  return useMutation({
+  return useMutation<Pupil, Error, Pupil>({
     mutationFn: createPupilInfo,
-    onSuccess: (data) => {
-      console.log("Pupil Created:", data);
+    onSuccess: () => {
+      console.log("Pupil Created ...");
     },
-    onError: (err: any) => {
-      // Log full error for debugging
-      console.error("Error Creating Pupil", err?.response?.data || err.message || err);
+    onError: (err: Error) => {
+      console.error("Error Creating Pupil", err);
     },
   });
 }

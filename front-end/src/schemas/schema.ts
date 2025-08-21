@@ -16,6 +16,7 @@ const phoneRegex = /^[\d\s\-\+\(\)]{7,15}$/;
 
 export const pupilSchema = z.object({
   // Personal Details
+  _id: z.string(),
   title: z.enum(["Mr", "Mrs", "Miss", "Ms", "Dr"]).optional(),
   forename: z.string().min(1, { message: "Forename is required." }).max(50, { message: "Forename cannot exceed 50 characters." }),
   surname: z.string().min(1, { message: "Surname is required." }).max(50, { message: "Surname cannot exceed 50 characters." }),

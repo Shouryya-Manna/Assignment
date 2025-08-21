@@ -32,7 +32,7 @@ function ListPupil() {
             </div>
           ) : isError ? (
             <div className="text-center text-red-600 font-medium py-10">
-              ❌ Failed to fetch pupil data
+              Failed to fetch pupil data
             </div>
           ) : (
             <DataTable

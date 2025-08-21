@@ -1,7 +1,42 @@
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useSelectedPupil } from "@/context/SelectedRowContext";
 import type { Pupil } from "@/schemas/schema";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const columns: ColumnDef<Pupil>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "title",
     header: "Title",
@@ -73,4 +108,40 @@ export const columns: ColumnDef<Pupil>[] = [
     enableSorting: true,
     enableColumnFilter: true,
   },
+  {
+    accessorKey: "licenseType",
+    header: "LicenseType",
+    enableSorting: true,
+    enableColumnFilter: true,
+  },
+  {
+  id: "actions",
+  enableHiding: false,
+  cell: ({ row }: { row: Row<Pupil> }) => {
+    const navigate = useNavigate();
+    const { setSelectedPupil } = useSelectedPupil();
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={() => {
+              setSelectedPupil(row.original);
+              console.log("Navigating to pupil:", row.original._id);
+              navigate(`/pupils/${row.original._id}`);
+            }}
+          >
+            View
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
+}
 ];

@@ -30,7 +30,7 @@ function App() {
           element: <AddPupil />,
         },
         {
-          path: "pupils/:pupilId", 
+          path: "pupils/:id", 
           element: <ViewPupil />,
         },
         {
