@@ -17,4 +17,11 @@ export const createPupilInfo = async (newPupil: Pupil) => {
   return res.data as Pupil;
 };
 
-
+export const deletePupil = async (_id: string) => {
+  if (!_id) throw new Error("Pupil ID is required");
+  const res = await api.delete(`/pupils/${_id}`);
+  if (res.status !== 200) {
+    throw new Error(res.data?.error?.message || "Failed to delete pupil");
+  }
+  return res.data;
+};

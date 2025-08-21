@@ -1,17 +1,29 @@
+import { useDeletePupil } from "@/api/Mutations";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSelectedPupil } from "@/context/SelectedRowContext";
 import type { Pupil } from "@/schemas/schema";
+
 import type { ColumnDef, Row } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const columns: ColumnDef<Pupil>[] = [
@@ -115,33 +127,97 @@ export const columns: ColumnDef<Pupil>[] = [
     enableColumnFilter: true,
   },
   {
-  id: "actions",
-  enableHiding: false,
-  cell: ({ row }: { row: Row<Pupil> }) => {
-    const navigate = useNavigate();
-    const { setSelectedPupil } = useSelectedPupil();
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }: { row: Row<Pupil> }) => {
+      const [dialogOpen, setDialogOpen] = useState(false);
+      const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+      const navigate = useNavigate();
+      const { setSelectedPupil } = useSelectedPupil();
+      const deletePupilMutation = useDeletePupil();
 
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            onClick={() => {
-              setSelectedPupil(row.original);
-              console.log("Navigating to pupil:", row.original._id);
-              navigate(`/pupils/${row.original._id}`);
-            }}
-          >
-            View
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
+      return (
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedPupil(row.original);
+                  navigate(`/pupils/${row.original._id}`);
+                }}
+              >
+                View
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  setSelectedPupil(row.original);
+                  navigate(`/pupils/${row.original._id}`);
+                }}
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => {
+                  setSelectedRowId(row.original._id);
+                  setDialogOpen(true);
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Dialog for delete confirmation */}
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogPortal>
+              {/* Overlay with blur */}
+              <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" />
+
+              <DialogContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md w-full p-6 z-50 rounded-lg bg-white shadow-lg">
+                <DialogHeader>
+                  <DialogTitle>Confirm Deletion</DialogTitle>
+                  <DialogDescription>
+                    Are you sure you want to delete{" "}
+                    <b>{row.original.forename}</b>? This action cannot be
+                    undone.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter className="flex justify-end gap-2 mt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      if (selectedRowId) {
+                        deletePupilMutation.mutate(selectedRowId, {
+                          onSuccess: () => setDialogOpen(false),
+                        });
+                      }
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </DialogPortal>
+          </Dialog>
+        </>
+      );
+    },
   },
-}
 ];

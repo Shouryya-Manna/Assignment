@@ -1,6 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 import { createPupilInfo } from "./Api";
+import { deletePupil } from "./Api";
 import type { Pupil } from "@/schemas/schema";
+import { toast } from "sonner";
+import type { AxiosError } from "axios";
 
 export function usePupilMutation() {
   return useMutation<Pupil, Error, Pupil>({
@@ -13,3 +16,24 @@ export function usePupilMutation() {
     },
   });
 }
+
+export const useDeletePupil = (): UseMutationResult<
+  any,       // returned data from API
+  AxiosError, // error type
+  string     // variable passed to mutate
+> => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deletePupil(id),
+    onSuccess: () => {
+      toast( "Pupil deleted successfully" );
+      queryClient.invalidateQueries({ queryKey: ["pupils"] });
+    },
+    onError: (error: AxiosError) => {
+      toast(
+       "Failed to delete pupil"
+      )
+    },
+  });
+};

@@ -67,21 +67,8 @@ const AddPupil = () => {
   });
 
   const pupilMutation = usePupilMutation();
-  const { pupils } = useShowAllPupilsQuery();
 
   const onSubmit: SubmitHandler<Pupil> = (data) => {
-    // Check for duplicate email in frontend
-    const pupilList = Array.isArray(pupils.data) ? pupils.data : [];
-const emailExists = pupilList.some(
-  (pupil: Pupil) => pupil.email === data.email
-);
-    if (emailExists) {
-      toast.error("Email already exists", {
-        description: "A pupil with this email is already registered.",
-      });
-      return;
-    }
-
     pupilMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Pupil Created", {
@@ -177,6 +164,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Enter forename" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -189,6 +177,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Enter surname" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -203,6 +192,7 @@ const emailExists = pupilList.some(
                     <FormControl>
                       <Input placeholder="Enter email" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -218,7 +208,7 @@ const emailExists = pupilList.some(
                         <Input
                           type="date"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value || ""} // Ensure the value is a string
                           onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
@@ -239,6 +229,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Enter mobile number" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -251,6 +242,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Enter work number" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -267,6 +259,7 @@ const emailExists = pupilList.some(
                         onCheckedChange={(checked) => field.onChange(checked)}
                       />
                     </FormControl>
+                    <FormMessage />
                     <FormLabel className="mb-0">Allow Text Messaging</FormLabel>
                   </FormItem>
                 )}
@@ -288,6 +281,7 @@ const emailExists = pupilList.some(
                           <FormControl>
                             <Input placeholder="Postcode" {...field} />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -300,6 +294,7 @@ const emailExists = pupilList.some(
                           <FormControl>
                             <Input placeholder="House No." {...field} />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -312,6 +307,7 @@ const emailExists = pupilList.some(
                           <FormControl>
                             <Input placeholder="Address" {...field} />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -332,6 +328,7 @@ const emailExists = pupilList.some(
                           <FormControl>
                             <Input placeholder="Postcode" {...field} />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -344,6 +341,7 @@ const emailExists = pupilList.some(
                           <FormControl>
                             <Input placeholder="House No." {...field} />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -356,6 +354,7 @@ const emailExists = pupilList.some(
                           <FormControl>
                             <Input placeholder="Address" {...field} />
                           </FormControl>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -391,6 +390,7 @@ const emailExists = pupilList.some(
                           </SelectContent>
                         </Select>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -403,6 +403,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Owner name" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -418,6 +419,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Allocated to" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -448,6 +450,7 @@ const emailExists = pupilList.some(
                           </SelectContent>
                         </Select>
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -463,6 +466,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="License number" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -477,6 +481,7 @@ const emailExists = pupilList.some(
                           onCheckedChange={(checked) => field.onChange(checked)}
                         />
                       </FormControl>
+                      <FormMessage />
                       <FormLabel className="mb-0">Passed Theory</FormLabel>
                     </FormItem>
                   )}
@@ -493,6 +498,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Certificate No." {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -506,10 +512,11 @@ const emailExists = pupilList.some(
                         <Input
                           type="date"
                           {...field}
-                          value={field.value || ""}
+                          value={field.value || ""} // Ensure the value is a string
                           onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -528,6 +535,7 @@ const emailExists = pupilList.some(
                           onCheckedChange={(checked) => field.onChange(checked)}
                         />
                       </FormControl>
+                      <FormMessage />
                       <FormLabel className="mb-0">FOTT</FormLabel>
                     </FormItem>
                   )}
@@ -543,6 +551,7 @@ const emailExists = pupilList.some(
                           onCheckedChange={(checked) => field.onChange(checked)}
                         />
                       </FormControl>
+                      <FormMessage />
                       <FormLabel className="mb-0">Full Access</FormLabel>
                     </FormItem>
                   )}
@@ -559,6 +568,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Availability" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -571,6 +581,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="0%" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -586,6 +597,7 @@ const emailExists = pupilList.some(
                       <FormControl>
                         <Input placeholder="Product" {...field} />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -602,6 +614,7 @@ const emailExists = pupilList.some(
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -618,6 +631,7 @@ const emailExists = pupilList.some(
                         onCheckedChange={(checked) => field.onChange(checked)}
                       />
                     </FormControl>
+                    <FormMessage />
                     <FormLabel className="mb-0">Pupil Caution</FormLabel>
                   </FormItem>
                 )}
@@ -632,12 +646,17 @@ const emailExists = pupilList.some(
                     <FormControl>
                       <Textarea placeholder="Enter notes" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <Button type="submit" className="w-full">
-                Submit
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={pupilMutation.isPending}
+              >
+                {pupilMutation.isPending ? "Submitting..." : "Submit"}
               </Button>
             </form>
           </Form>
