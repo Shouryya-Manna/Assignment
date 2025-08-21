@@ -1,77 +1,79 @@
 import { z } from "zod";
 
-// Zod schema for pupil
+// Helper for ISO date string validation and not in future
+const isoDateStringPast = z
+  .string()
+  .refine(
+    (val) => !val || !isNaN(Date.parse(val)),
+    { message: "Please enter a valid date in YYYY-MM-DD format." }
+  )
+  .refine(
+    (val) => !val || new Date(val) <= new Date(),
+    { message: "Date of birth cannot be in the future." }
+  );
+
+const phoneRegex = /^[\d\s\-\+\(\)]{7,15}$/;
+
 export const pupilSchema = z.object({
+  // Personal Details
   title: z.enum(["Mr", "Mrs", "Miss", "Ms", "Dr"]).optional(),
-  forename: z.string().min(2, {
-    message: "Forename must be at least 2 characters.",
-  }),
-  surname: z
-    .string()
-    .min(1, "Surname is required")
-    .max(50, "Surname cannot exceed 50 characters"),
-  email: z.string(), // allow empty email
-  dob: z.date(),
+  forename: z.string().min(1, { message: "Forename is required." }).max(50, { message: "Forename cannot exceed 50 characters." }),
+  surname: z.string().min(1, { message: "Surname is required." }).max(50, { message: "Surname cannot exceed 50 characters." }),
+  email: z.email({ message: "Please enter a valid email address." }).optional(),
+  dob: isoDateStringPast,
   gender: z.enum(["Male", "Female", "Other"]),
-  home: z
-    .object({
-      mobile: z
-        .string()
-        .regex(/^[\d\s\-\+\(\)]*$/, "Invalid mobile number format")
-        .optional()
-        .or(z.literal("")),
-      work: z
-        .string()
-        .regex(/^[\d\s\-\+\(\)]*$/, "Invalid work number format")
-        .optional()
-        .or(z.literal("")),
-    })
-    .optional(),
-  allowTextMessaging: z.boolean(),
-  pickupAddress: z
-    .object({
-      postcode: z
-        .string()
-        .regex(
-          /^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$/i,
-          "Invalid UK postcode format"
-        )
-        .optional()
-        .or(z.literal("")),
-      houseNo: z.string().optional(),
-      address: z.string().optional(),
-    })
-    .optional(),
-  homeAddress: z
-    .object({
-      postcode: z
-        .string()
-        .regex(
-          /^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$/i,
-          "Invalid UK postcode format"
-        )
-        .optional()
-        .or(z.literal("")),
-      houseNo: z.string().optional(),
-      address: z.string().optional(),
-    })
-    .optional(),
-  pupilType: z.enum(["Manual Gearbox", "Automatic", "Motorcycle", "HGV"]),
+
+  // Contact Information
+  home: z.object({
+    mobile: z.string()
+      .regex(phoneRegex, { message: "Please enter a valid phone number (7-15 digits)." })
+      .optional(),
+    work: z.string()
+      .regex(phoneRegex, { message: "Please enter a valid phone number (7-15 digits)." })
+      .optional(),
+  }).optional(),
+
+  allowTextMessaging: z.boolean().optional(),
+
+  // Addresses
+  pickupAddress: z.object({
+    postcode: z.string()
+      .regex(/^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$/i, { message: "Please enter a valid UK postcode." })
+      .optional(),
+    houseNo: z.string().optional(),
+    address: z.string().optional(),
+  }).optional(),
+
+  homeAddress: z.object({
+    postcode: z.string()
+      .regex(/^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$/i, { message: "Please enter a valid UK postcode." })
+      .optional(),
+    houseNo: z.string().optional(),
+    address: z.string().optional(),
+  }).optional(),
+
+  // Extra Details
+  pupilType: z.enum(["Manual Gearbox", "Automatic", "Motorcycle", "HGV"]).optional(),
   pupilOwner: z.string().optional(),
   allocatedTo: z.string().optional(),
-  licenseType: z.enum(["No License", "Provisional", "Full License"]),
+  licenseType: z.enum(["No License", "Provisional", "Full License"]).optional(),
   licenseNo: z.string().optional(),
-  passedTheory: z.boolean(),
+  passedTheory: z.boolean().optional(),
   certNo: z.string().optional(),
-  datePassed: z.date(),
-  fott: z.boolean(),
-  fullAccess: z.boolean(),
+  datePassed: z.string()
+    .refine(
+      (val) => !val || !isNaN(Date.parse(val)),
+      { message: "Please enter a valid date in YYYY-MM-DD format." }
+    )
+    .optional(),
+  fott: z.boolean().optional(),
+  fullAccess: z.boolean().optional(),
   usualAvailability: z.string().optional(),
-  discount: z.string(),
+  discount: z.string().optional(),
   defaultProduct: z.string().optional(),
-  onlinePassword: z.string().optional(),
-  pupilCaution: z.boolean(),
-  notes: z.string().max(1000, "Notes cannot exceed 1000 characters").optional(),
+  onlinePassword: z.string().min(6, { message: "Password must be at least 6 characters." }).optional(),
+  pupilCaution: z.boolean().optional(),
+  notes: z.string().max(1000, { message: "Notes cannot exceed 1000 characters." }).optional(),
 });
 
 // TypeScript type inference

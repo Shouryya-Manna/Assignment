@@ -5,14 +5,32 @@ import { useForm } from "react-hook-form";
 import { pupilSchema } from "@/schemas/schema";
 import type { Pupil } from "@/schemas/schema";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { usePupilMutation } from "@/api/Mutations";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const AddPupil = () => {
@@ -23,7 +41,7 @@ const AddPupil = () => {
       forename: "",
       surname: "",
       email: "",
-      dob: new Date(),
+      dob: new Date().toISOString().substring(0, 10), // ISO string for date input
       gender: "Male",
       home: { mobile: "", work: "" },
       allowTextMessaging: false,
@@ -36,7 +54,7 @@ const AddPupil = () => {
       licenseNo: "",
       passedTheory: false,
       certNo: "",
-      datePassed: new Date(),
+      datePassed: "", // empty string for optional date
       fott: false,
       fullAccess: false,
       usualAvailability: "",
@@ -47,7 +65,6 @@ const AddPupil = () => {
       notes: "",
     },
   });
- 
 
   const pupilMutation = usePupilMutation();
   const onSubmit: SubmitHandler<Pupil> = (data) => {
@@ -67,7 +84,6 @@ const AddPupil = () => {
     });
   };
 
-  
   return (
     <div className="flex justify-center py-10">
       <Card className="w-full max-w-4xl">
@@ -87,7 +103,10 @@ const AddPupil = () => {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select title" />
                           </SelectTrigger>
@@ -111,7 +130,10 @@ const AddPupil = () => {
                     <FormItem>
                       <FormLabel>Gender</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
@@ -138,6 +160,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter forename" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -150,6 +173,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter surname" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -164,6 +188,7 @@ const AddPupil = () => {
                     <FormControl>
                       <Input placeholder="Enter email" {...field} />
                     </FormControl>
+                    <FormMessage /> 
                   </FormItem>
                 )}
               />
@@ -174,15 +199,16 @@ const AddPupil = () => {
                   name="dob"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Date of Birth</FormLabel>
+                      <FormLabel>Date of birth</FormLabel>
                       <FormControl>
                         <Input
                           type="date"
                           {...field}
-                          value={field.value ? field.value.toISOString().substring(0, 10) : ""}
-                          onChange={(e) => field.onChange(new Date(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -199,6 +225,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter mobile number" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -211,6 +238,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter work number" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -228,6 +256,7 @@ const AddPupil = () => {
                       />
                     </FormControl>
                     <FormLabel className="mb-0">Allow Text Messaging</FormLabel>
+                    <FormMessage /> 
                   </FormItem>
                 )}
               />
@@ -235,7 +264,9 @@ const AddPupil = () => {
               {/* Pickup & Home Addresses */}
               <div className="grid grid-cols-2 gap-6">
                 <Card className="bg-gray-50 p-4 rounded-md">
-                  <CardTitle className="text-sm font-semibold mb-2">Pickup Address</CardTitle>
+                  <CardTitle className="text-sm font-semibold mb-2">
+                    Pickup Address
+                  </CardTitle>
                   <div className="grid grid-cols-3 gap-2">
                     <FormField
                       control={form.control}
@@ -246,6 +277,7 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Postcode" {...field} />
                           </FormControl>
+                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -258,6 +290,7 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="House No." {...field} />
                           </FormControl>
+                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -270,6 +303,7 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Address" {...field} />
                           </FormControl>
+                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -277,7 +311,9 @@ const AddPupil = () => {
                 </Card>
 
                 <Card className="bg-gray-50 p-4 rounded-md">
-                  <CardTitle className="text-sm font-semibold mb-2">Home Address</CardTitle>
+                  <CardTitle className="text-sm font-semibold mb-2">
+                    Home Address
+                  </CardTitle>
                   <div className="grid grid-cols-3 gap-2">
                     <FormField
                       control={form.control}
@@ -288,6 +324,7 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Postcode" {...field} />
                           </FormControl>
+                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -312,6 +349,7 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Address" {...field} />
                           </FormControl>
+                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -328,18 +366,26 @@ const AddPupil = () => {
                     <FormItem>
                       <FormLabel>Pupil Type</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Manual Gearbox">Manual Gearbox</SelectItem>
+                            <SelectItem value="Manual Gearbox">
+                              Manual Gearbox
+                            </SelectItem>
                             <SelectItem value="Automatic">Automatic</SelectItem>
-                            <SelectItem value="Motorcycle">Motorcycle</SelectItem>
+                            <SelectItem value="Motorcycle">
+                              Motorcycle
+                            </SelectItem>
                             <SelectItem value="HGV">HGV</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -352,6 +398,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Owner name" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -367,6 +414,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Allocated to" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -377,17 +425,27 @@ const AddPupil = () => {
                     <FormItem>
                       <FormLabel>License Type</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="No License">No License</SelectItem>
-                            <SelectItem value="Provisional">Provisional</SelectItem>
-                            <SelectItem value="Full License">Full License</SelectItem>
+                            <SelectItem value="No License">
+                              No License
+                            </SelectItem>
+                            <SelectItem value="Provisional">
+                              Provisional
+                            </SelectItem>
+                            <SelectItem value="Full License">
+                              Full License
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -403,6 +461,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="License number" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -418,6 +477,7 @@ const AddPupil = () => {
                         />
                       </FormControl>
                       <FormLabel className="mb-0">Passed Theory</FormLabel>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -433,6 +493,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Certificate No." {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -446,10 +507,11 @@ const AddPupil = () => {
                         <Input
                           type="date"
                           {...field}
-                          value={field.value ? field.value.toISOString().substring(0, 10) : ""}
-                          onChange={(e) => field.onChange(new Date(e.target.value))}
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -469,6 +531,7 @@ const AddPupil = () => {
                         />
                       </FormControl>
                       <FormLabel className="mb-0">FOTT</FormLabel>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -499,6 +562,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Availability" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -511,6 +575,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="0%" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -526,6 +591,7 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Product" {...field} />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -536,8 +602,13 @@ const AddPupil = () => {
                     <FormItem>
                       <FormLabel>Online Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="Password" type="password" {...field} />
+                        <Input
+                          placeholder="Password"
+                          type="password"
+                          {...field}
+                        />
                       </FormControl>
+                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -555,6 +626,7 @@ const AddPupil = () => {
                       />
                     </FormControl>
                     <FormLabel className="mb-0">Pupil Caution</FormLabel>
+                    <FormMessage /> 
                   </FormItem>
                 )}
               />
@@ -568,6 +640,7 @@ const AddPupil = () => {
                     <FormControl>
                       <Textarea placeholder="Enter notes" {...field} />
                     </FormControl>
+                    <FormMessage /> 
                   </FormItem>
                 )}
               />
