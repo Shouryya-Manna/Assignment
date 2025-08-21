@@ -4,7 +4,7 @@ import DataTable from "./DataTable";
 import { columns } from "./Column";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Loader2, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 
 function ListPupil() {
   const { pupils, isLoading, isError } = useShowAllPupilsQuery();

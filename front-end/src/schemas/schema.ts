@@ -14,7 +14,7 @@ const phoneRegex = /^[\d\s\-\+\(\)]+$/;
 
 export const pupilSchema = z.object({
   // Personal Details
-  _id: z.string(),
+  _id: z.string().optional(),
   title: z.enum(["Mr", "Mrs", "Miss", "Ms", "Dr"]).optional(),
   forename: z
     .string()

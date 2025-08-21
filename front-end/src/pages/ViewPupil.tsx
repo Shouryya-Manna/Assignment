@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { usePupil } from "@/api/Queries";
-import type { Pupil } from "@/schemas/schema";
+
 
 // Shadcn UI & Lucide React Imports
 import { Button } from "@/components/ui/button";

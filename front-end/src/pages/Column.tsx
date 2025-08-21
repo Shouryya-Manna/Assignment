@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSelectedPupil } from "@/context/SelectedRowContext";
+
 import type { Pupil } from "@/schemas/schema";
 
 import type { ColumnDef, Row } from "@tanstack/react-table";
@@ -131,7 +131,10 @@ export const columns: ColumnDef<Pupil>[] = [
     enableHiding: false,
     cell: ({ row }: { row: Row<Pupil> }) => {
       const [dialogOpen, setDialogOpen] = useState(false);
-      const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
+      const [selectedRowId, setSelectedRowId] = useState<
+        string | null | undefined
+      >(null);
+
       const navigate = useNavigate();
       const deletePupilMutation = useDeletePupil();
 
@@ -146,7 +149,7 @@ export const columns: ColumnDef<Pupil>[] = [
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-               <DropdownMenuItem
+              <DropdownMenuItem
                 onClick={() => {
                   // SIMPLIFIED: Just navigate. The detail page will handle the fetching.
                   navigate(`/pupils/${row.original._id}`);
@@ -158,7 +161,7 @@ export const columns: ColumnDef<Pupil>[] = [
               <DropdownMenuItem
                 onClick={() => {
                   // You might still use context for an Edit form to pre-fill data
-                  // setSelectedPupil(row.original); 
+                  // setSelectedPupil(row.original);
                   navigate(`/pupils/edit/${row.original._id}`); // Example edit route
                 }}
               >

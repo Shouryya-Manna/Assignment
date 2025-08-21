@@ -646,7 +646,7 @@ const AddPupil = () => {
                     <FormControl>
                       <Textarea placeholder="Enter notes" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    
                   </FormItem>
                 )}
               />
@@ -654,7 +654,7 @@ const AddPupil = () => {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={pupilMutation.isPending}
+              
               >
                 {pupilMutation.isPending ? "Submitting..." : "Submit"}
               </Button>
