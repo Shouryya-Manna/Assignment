@@ -1,4 +1,3 @@
-import React from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,6 +30,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { usePupilMutation } from "@/api/Mutations";
+import { useShowAllPupilsQuery } from "@/api/Queries";
 import { toast } from "sonner";
 
 const AddPupil = () => {
@@ -41,7 +41,7 @@ const AddPupil = () => {
       forename: "",
       surname: "",
       email: "",
-      dob: new Date().toISOString().substring(0, 10), // ISO string for date input
+      dob: new Date().toISOString().substring(0, 10),
       gender: "Male",
       home: { mobile: "", work: "" },
       allowTextMessaging: false,
@@ -54,7 +54,7 @@ const AddPupil = () => {
       licenseNo: "",
       passedTheory: false,
       certNo: "",
-      datePassed: "", // empty string for optional date
+      datePassed: "",
       fott: false,
       fullAccess: false,
       usualAvailability: "",
@@ -67,18 +67,35 @@ const AddPupil = () => {
   });
 
   const pupilMutation = usePupilMutation();
+  const { pupils } = useShowAllPupilsQuery();
+
   const onSubmit: SubmitHandler<Pupil> = (data) => {
-    console.log(data);
+    // Check for duplicate email in frontend
+    const pupilList = Array.isArray(pupils.data) ? pupils.data : [];
+const emailExists = pupilList.some(
+  (pupil: Pupil) => pupil.email === data.email
+);
+    if (emailExists) {
+      toast.error("Email already exists", {
+        description: "A pupil with this email is already registered.",
+      });
+      return;
+    }
+
     pupilMutation.mutate(data, {
       onSuccess: () => {
-        toast.success("Event Created", {
-          description: "Your event has been added successfully.",
+        toast.success("Pupil Created", {
+          description: "Your pupil has been added successfully.",
         });
         form.reset();
       },
-      onError: (err) => {
-        toast.error("Failed to create event", {
-          description: err.message || "Something went wrong.",
+      onError: (err: any) => {
+        const backendMsg =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Something went wrong.";
+        toast.error("Failed to create pupil", {
+          description: backendMsg,
         });
       },
     });
@@ -160,7 +177,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter forename" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -173,7 +189,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter surname" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -188,7 +203,6 @@ const AddPupil = () => {
                     <FormControl>
                       <Input placeholder="Enter email" {...field} />
                     </FormControl>
-                    <FormMessage /> 
                   </FormItem>
                 )}
               />
@@ -199,7 +213,7 @@ const AddPupil = () => {
                   name="dob"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Date of birth</FormLabel>
+                      <FormLabel>Date of Birth</FormLabel>
                       <FormControl>
                         <Input
                           type="date"
@@ -208,7 +222,7 @@ const AddPupil = () => {
                           onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
-                      <FormMessage /> 
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -225,7 +239,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter mobile number" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -238,7 +251,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Enter work number" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -256,7 +268,6 @@ const AddPupil = () => {
                       />
                     </FormControl>
                     <FormLabel className="mb-0">Allow Text Messaging</FormLabel>
-                    <FormMessage /> 
                   </FormItem>
                 )}
               />
@@ -277,7 +288,6 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Postcode" {...field} />
                           </FormControl>
-                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -290,7 +300,6 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="House No." {...field} />
                           </FormControl>
-                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -303,7 +312,6 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Address" {...field} />
                           </FormControl>
-                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -324,7 +332,6 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Postcode" {...field} />
                           </FormControl>
-                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -349,7 +356,6 @@ const AddPupil = () => {
                           <FormControl>
                             <Input placeholder="Address" {...field} />
                           </FormControl>
-                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
@@ -385,7 +391,6 @@ const AddPupil = () => {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -398,7 +403,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Owner name" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -414,7 +418,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Allocated to" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -445,7 +448,6 @@ const AddPupil = () => {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -461,7 +463,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="License number" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -477,7 +478,6 @@ const AddPupil = () => {
                         />
                       </FormControl>
                       <FormLabel className="mb-0">Passed Theory</FormLabel>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -493,7 +493,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Certificate No." {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -511,7 +510,6 @@ const AddPupil = () => {
                           onChange={(e) => field.onChange(e.target.value)}
                         />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -531,7 +529,6 @@ const AddPupil = () => {
                         />
                       </FormControl>
                       <FormLabel className="mb-0">FOTT</FormLabel>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -562,7 +559,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Availability" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -575,7 +571,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="0%" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -591,7 +586,6 @@ const AddPupil = () => {
                       <FormControl>
                         <Input placeholder="Product" {...field} />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -608,7 +602,6 @@ const AddPupil = () => {
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage /> 
                     </FormItem>
                   )}
                 />
@@ -626,7 +619,6 @@ const AddPupil = () => {
                       />
                     </FormControl>
                     <FormLabel className="mb-0">Pupil Caution</FormLabel>
-                    <FormMessage /> 
                   </FormItem>
                 )}
               />
@@ -640,7 +632,6 @@ const AddPupil = () => {
                     <FormControl>
                       <Textarea placeholder="Enter notes" {...field} />
                     </FormControl>
-                    <FormMessage /> 
                   </FormItem>
                 )}
               />
