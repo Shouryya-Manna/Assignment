@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Pupil } from "@/schemas/schema";
+import type { Pupil } from "@/schemas/Schema";
 
 interface PupilStore {
   selectedPupil: Pupil | null;

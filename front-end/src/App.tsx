@@ -26,15 +26,15 @@ function App() {
           element: <ListPupil />,
         },
         {
-          path: "pupils/add",
+          path: "/pupils/add",
           element: <AddPupil />,
         },
         {
-          path: "pupils/:id", 
+          path: "/pupils/:id", 
           element: <ViewPupil />,
         },
         {
-          path: "pupils/:pupilId/edit", 
+          path: "/pupils/:id/edit", 
           element: <EditPupil />,
         },
       ],

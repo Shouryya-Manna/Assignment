@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { Column, ColumnDef } from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -12,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 import {
   ArrowUpDown,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -35,6 +36,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,12 +58,44 @@ export function DataTable<TData, TValue>({
   if (!memoizedColumns.length) return <div>No columns defined.</div>;
 
   const filterableColumns = ["forename", "surname", "title", "licenseType"];
-  const columnLabels: Record<string, string> = {
-    title: "Title",
-    forename: "Forename",
-    surname: "Surname",
-    licenseType: "License Type",
-  };
+
+  function getColumnLabel<TData, TValue>(
+    column: Column<TData, TValue>
+  ): string {
+    const { columnDef } = column;
+
+    // Prefer a plain string header if provided
+    if (typeof columnDef.header === "string") return columnDef.header;
+
+    // Otherwise prefer an explicit meta label if you add one in your columns
+    const meta = columnDef.meta as { label?: string } | undefined;
+    if (meta?.label) return meta.label;
+
+    // Fallback: humanize accessorKey or id (handles dots, camelCase, snake_case)
+    const key =
+      (columnDef as any).accessorKey ??
+      (typeof column.id === "string" ? column.id : "");
+    const text = String(key);
+    if (!text) return column.id;
+
+    return text
+      .split(".")
+      .map((part) =>
+        part
+          .replace(/_/g, " ")
+          .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+          .replace(/^\w/, (c) => c.toUpperCase())
+      )
+      .join(" ");
+  }
+
+  // 2) Helper to get a label by column id (useful for your filter select)
+  function getLabelById<TData>(table: any, id: string): string {
+    const col =
+      table.getAllLeafColumns().find((c: Column<TData, any>) => c.id === id) ??
+      table.getAllColumns().find((c: Column<TData, any>) => c.id === id);
+    return col ? getColumnLabel(col) : id;
+  }
 
   const [filterColumn, setFilterColumn] = useState<string>(
     filterableColumns[0]
@@ -95,51 +134,66 @@ export function DataTable<TData, TValue>({
             <SelectValue placeholder="Select column" />
           </SelectTrigger>
           <SelectContent>
-            {filterableColumns.map((col) => (
-              <SelectItem key={col} value={col}>
-                {columnLabels[col]}
+            {filterableColumns.map((colId) => (
+              <SelectItem key={colId} value={colId}>
+                {getLabelById(table, colId)}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         <Input
-          placeholder={`Filter by ${columnLabels[filterColumn]}...`}
+          placeholder={`Filter by ${getLabelById(table, filterColumn)}...`}
           value={filterValue}
           onChange={(e) => setFilterValue(e.target.value)}
           className="max-w-sm"
         />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {getColumnLabel(column)}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Table */}
       <div className="rounded-xl border shadow-sm overflow-hidden">
         <div className="max-h-[600px] overflow-auto">
           <Table>
-            <TableHeader className="sticky top-0 bg-muted z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      className="px-4 py-2 text-sm font-semibold text-muted-foreground"
-                    >
-                      {!header.isPlaceholder && (
-                        <div
-                          className="flex items-center gap-1 cursor-pointer select-none text-muted-foreground"
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(
+            <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                          <ArrowUpDown className="h-4 w-4 opacity-50" />
-                        </div>
-                      )}
                     </TableHead>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
             <TableBody>
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (

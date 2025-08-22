@@ -1,8 +1,8 @@
 import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { pupilSchema } from "@/schemas/schema";
-import type { Pupil } from "@/schemas/schema";
+import { pupilSchema } from "@/schemas/Schema";
+import type { Pupil } from "@/schemas/Schema";
 import { Button } from "@/components/ui/button";
 import {
   Card,

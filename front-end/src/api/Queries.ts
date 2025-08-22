@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllPupilInfo, fetchPupilById } from "./Api";
-import type { Pupil } from "@/schemas/schema";
+import type { Pupil } from "@/schemas/Schema";
 
 export function useShowAllPupilsQuery() {
   const {

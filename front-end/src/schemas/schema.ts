@@ -29,22 +29,20 @@ export const pupilSchema = z.object({
   gender: z.enum(["Male", "Female", "Other"]),
 
   // Contact Information
-  home: z
-    .object({
-      mobile: z
-        .string()
-        .regex(phoneRegex, {
-          message: "Invalid mobile number format",
-        })
-        .optional(),
-      work: z
-        .string()
-        .regex(phoneRegex, {
-          message: "Invalid mobile number format",
-        })
-        .optional(),
-    })
-    .optional(),
+  home: z.object({
+    mobile: z
+      .string()
+      .min(1, { message: "Mobile number is required" }) // required
+      .refine((val) => phoneRegex.test(val), {
+        message: "Invalid mobile number format",
+      }),
+    work: z
+      .string()
+      .min(1, { message: "Work number is required" })
+      .refine((val) => phoneRegex.test(val), {
+        message: "Invalid work number format",
+      }),
+  }),
 
   allowTextMessaging: z.boolean().optional(),
 

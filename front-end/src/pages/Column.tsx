@@ -19,10 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import type { Pupil } from "@/schemas/schema";
+import type { Pupil } from "@/schemas/Schema";
 
 import type { ColumnDef, Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -58,25 +58,65 @@ export const columns: ColumnDef<Pupil>[] = [
   },
   {
     accessorKey: "forename",
-    header: "Forename",
+   header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Forename
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     enableSorting: true,
     enableColumnFilter: true,
   },
   {
     accessorKey: "surname",
-    header: "Surname",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Surname
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     enableSorting: true,
     enableColumnFilter: true,
   },
   {
     accessorKey: "email",
-    header: "Email",
+   header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     enableSorting: true,
     enableColumnFilter: true,
   },
   {
     accessorKey: "dob",
-    header: "Date of Birth",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date of birth
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     enableSorting: true,
     enableColumnFilter: true,
     cell: ({ row }) => {
@@ -88,13 +128,33 @@ export const columns: ColumnDef<Pupil>[] = [
   },
   {
     accessorKey: "gender",
-    header: "Gender",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Gender
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     enableSorting: true,
     enableColumnFilter: true,
   },
   {
     accessorKey: "home.mobile",
-    header: "Mobile",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Contact
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     cell: ({ row }) => row.original.home?.mobile || "-",
     enableSorting: true,
     enableColumnFilter: true,
@@ -122,7 +182,17 @@ export const columns: ColumnDef<Pupil>[] = [
   },
   {
     accessorKey: "licenseType",
-    header: "LicenseType",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          License type
+          <ArrowUpDown />
+        </Button>
+      )
+    },
     enableSorting: true,
     enableColumnFilter: true,
   },
@@ -151,7 +221,6 @@ export const columns: ColumnDef<Pupil>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  // SIMPLIFIED: Just navigate. The detail page will handle the fetching.
                   navigate(`/pupils/${row.original._id}`);
                 }}
               >
@@ -160,9 +229,7 @@ export const columns: ColumnDef<Pupil>[] = [
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  // You might still use context for an Edit form to pre-fill data
-                  // setSelectedPupil(row.original);
-                  navigate(`/pupils/edit/${row.original._id}`); // Example edit route
+                  navigate(`/pupils/${row.original._id}/edit`); 
                 }}
               >
                 Edit
