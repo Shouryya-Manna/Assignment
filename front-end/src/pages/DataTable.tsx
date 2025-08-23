@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Column, ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row, Column } from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import {
   ArrowUpDown,
   ChevronDown,
@@ -17,6 +18,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  MoreHorizontal,
 } from "lucide-react";
 
 import {
@@ -42,6 +44,20 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import { useDeletePupil } from "@/api/Mutations";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,27 +70,55 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const memoizedColumns = useMemo(() => columns || [], [columns]);
   const memoizedData = useMemo(() => data || [], [data]);
+  const deletePupilMutation = useDeletePupil();
 
   if (!memoizedColumns.length) return <div>No columns defined.</div>;
 
   const filterableColumns = ["forename", "surname", "title", "licenseType"];
+  const [filterColumn, setFilterColumn] = useState<string>(filterableColumns[0]);
+  const [filterValue, setFilterValue] = useState<string>("");
 
-  function getColumnLabel<TData, TValue>(
-    column: Column<TData, TValue>
-  ): string {
+  const [rowSelection, setRowSelection] = useState({});
+  const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
+
+  const table = useReactTable({
+    data: memoizedData,
+    columns: memoizedColumns,
+    state: {
+      globalFilter: filterValue,
+      rowSelection,
+    },
+    onRowSelectionChange: setRowSelection,
+    getRowId: (row: any) => row._id,
+    enableRowSelection: true,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    globalFilterFn: (row, columnId, filterValue) => {
+      const cell = row.getValue(columnId);
+      if (cell === undefined || cell === null) return false;
+      return String(cell).toLowerCase().includes(String(filterValue).toLowerCase());
+    },
+  });
+
+  const selectedRows = table.getSelectedRowModel().rows;
+  const selectedIds = selectedRows.map((row) => row.original._id);
+  const selectedNames = selectedRows.map((row) => row.original.forename);
+
+  const handleFilterColumnChange = (val: string) => {
+    setFilterColumn(val);
+    setFilterValue(""); // reset search when changing column
+  };
+
+  function getColumnLabel<TData, TValue>(column: Column<TData, TValue>) {
     const { columnDef } = column;
-
-    // Prefer a plain string header if provided
     if (typeof columnDef.header === "string") return columnDef.header;
-
-    // Otherwise prefer an explicit meta label if you add one in your columns
     const meta = columnDef.meta as { label?: string } | undefined;
     if (meta?.label) return meta.label;
 
-    // Fallback: humanize accessorKey or id (handles dots, camelCase, snake_case)
     const key =
-      (columnDef as any).accessorKey ??
-      (typeof column.id === "string" ? column.id : "");
+      (columnDef as any).accessorKey ?? (typeof column.id === "string" ? column.id : "");
     const text = String(key);
     if (!text) return column.id;
 
@@ -89,45 +133,16 @@ export function DataTable<TData, TValue>({
       .join(" ");
   }
 
-  // 2) Helper to get a label by column id (useful for your filter select)
-  function getLabelById<TData>(table: any, id: string): string {
+  function getLabelById<TData>(table: any, id: string) {
     const col =
       table.getAllLeafColumns().find((c: Column<TData, any>) => c.id === id) ??
       table.getAllColumns().find((c: Column<TData, any>) => c.id === id);
     return col ? getColumnLabel(col) : id;
   }
 
-  const [filterColumn, setFilterColumn] = useState<string>(
-    filterableColumns[0]
-  );
-  const [filterValue, setFilterValue] = useState<string>("");
-
-  const table = useReactTable({
-    data: memoizedData,
-    columns: memoizedColumns,
-    state: { globalFilter: filterValue },
-    onGlobalFilterChange: setFilterValue,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    globalFilterFn: (row, columnId, filterValue) => {
-      const cell = row.getValue(columnId);
-      if (cell === undefined || cell === null) return false;
-      return String(cell)
-        .toLowerCase()
-        .includes(String(filterValue).toLowerCase());
-    },
-  });
-
-  const handleFilterColumnChange = (val: string) => {
-    setFilterColumn(val);
-    setFilterValue(""); // reset search when changing column
-  };
-
   return (
-    <div className="space-y-6">
-      {/* Filter */}
+    <div className="space-y-6 ">
+      {/* Filters + Bulk Delete */}
       <div className="flex flex-wrap gap-3 items-center">
         <Select value={filterColumn} onValueChange={handleFilterColumnChange}>
           <SelectTrigger className="w-[180px]">
@@ -148,6 +163,15 @@ export function DataTable<TData, TValue>({
           onChange={(e) => setFilterValue(e.target.value)}
           className="max-w-sm"
         />
+
+        <Button
+          variant="destructive"
+          disabled={selectedIds.length === 0}
+          onClick={() => setBulkDialogOpen(true)}
+        >
+          Delete Selected ({selectedIds.length})
+        </Button>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -172,15 +196,56 @@ export function DataTable<TData, TValue>({
         </DropdownMenu>
       </div>
 
+      {/* Bulk Delete Dialog */}
+      <Dialog open={bulkDialogOpen} onOpenChange={setBulkDialogOpen}>
+        <DialogPortal>
+          <DialogOverlay className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40" />
+          <DialogContent className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md w-full p-6 z-50 rounded-lg bg-white shadow-lg">
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete{" "}
+                <b>{selectedIds.length}</b> pupil
+                {selectedIds.length > 1 && "s"}?
+                <br />
+                {selectedIds.length <= 5 && (
+                  <span>({selectedNames.join(", ")})</span>
+                )}
+                <br />This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex justify-end gap-2 mt-4">
+              <Button
+                variant="outline"
+                onClick={() => setBulkDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  if (selectedIds.length > 0) {
+                    deletePupilMutation.mutate(selectedIds, {
+                      onSuccess: () => setBulkDialogOpen(false),
+                    });
+                  }
+                }}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </DialogPortal>
+      </Dialog>
+
       {/* Table */}
       <div className="rounded-xl border shadow-sm overflow-hidden">
         <div className="max-h-[600px] overflow-auto">
           <Table>
             <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
@@ -189,11 +254,11 @@ export function DataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+
             <TableBody>
               {table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row) => (

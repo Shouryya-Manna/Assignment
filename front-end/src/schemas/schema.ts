@@ -1,15 +1,5 @@
 import { z } from "zod";
 
-// Helper for ISO date string validation and not in future
-const isoDateStringPast = z
-  .string()
-  .refine((val) => !val || !isNaN(Date.parse(val)), {
-    message: "Please enter a valid date in YYYY-MM-DD format.",
-  })
-  .refine((val) => !val || new Date(val) <= new Date(), {
-    message: "Date of birth cannot be in the future.",
-  })
-  .refine((val) => val.length > 0, { message: "Date of birth is required." }); // Add this line
 const phoneRegex = /^[\d\s\-\+\(\)]+$/;
 
 export const pupilSchema = z.object({
@@ -25,17 +15,16 @@ export const pupilSchema = z.object({
     .min(1, { message: "Surname is required." })
     .max(50, { message: "Surname cannot exceed 50 characters." }),
   email: z.email({ message: "Please enter a valid email address." }).optional(),
-  dob: isoDateStringPast,
+  dob: z
+    .date()
+    .max(new Date(), { message: "Date of birth cannot be in the future" }),
   gender: z.enum(["Male", "Female", "Other"]),
 
   // Contact Information
   home: z.object({
-    mobile: z
-      .string()
-      .min(1, { message: "Mobile number is required" }) // required
-      .refine((val) => phoneRegex.test(val), {
-        message: "Invalid mobile number format",
-      }),
+    mobile: z.string().refine((val) => phoneRegex.test(val), {
+      message: "Enter a valid number",
+    }),
     work: z
       .string()
       .min(1, { message: "Work number is required" })
@@ -84,12 +73,8 @@ export const pupilSchema = z.object({
   passedTheory: z.boolean().optional(),
   certNo: z.string().optional(),
   datePassed: z
-    .string()
-    .refine((val) => !val || !isNaN(Date.parse(val)), {
-      message: "Please enter a valid date in YYYY-MM-DD format.",
-    })
-    .optional()
-    .nullable(),
+    .date()
+    .max(new Date(), { message: "Date of birth cannot be in the future" }),
   fott: z.boolean().optional(),
   fullAccess: z.boolean().optional(),
   usualAvailability: z.string().optional(),

@@ -22,20 +22,27 @@ export function usePupilMutation() {
 }
 
 export const useDeletePupil = (): UseMutationResult<
-  any, // returned data from API
-  AxiosError, // error type
-  string // variable passed to mutate
+  any,
+  AxiosError,
+  string | string[]
 > => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => deletePupil(id),
+    mutationFn: async (ids: string | string[]) => {
+      if (Array.isArray(ids)) {
+        // call deletePupil for each ID
+        return Promise.all(ids.map((id) => deletePupil(id)));
+      } else {
+        return deletePupil(ids);
+      }
+    },
     onSuccess: () => {
-      toast("Pupil deleted successfully");
+      toast("Pupil(s) deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["pupils"] });
     },
-    onError: (error: AxiosError) => {
-      toast("Failed to delete pupil");
+    onError: () => {
+      toast("Failed to delete pupil(s)");
     },
   });
 };
