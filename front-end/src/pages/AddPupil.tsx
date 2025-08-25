@@ -98,7 +98,7 @@ const AddPupil = () => {
     <div className="pt-16 min-h-screen bg-gradient-to-br from-amber-50 via-cream-100 to-rose-50 py-12 px-4">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="font-serif text-5xl font-bold text-slate-800 mb-4">Create New Pupil</h1>
+          <h1 className="[font-family:var(--font-inter)] text-5xl font-bold text-slate-800 mb-4">Create New Pupil</h1>
           <p className="font-sans text-lg text-slate-600 max-w-2xl mx-auto">
             Enter the pupil's comprehensive details to begin their driving journey with our academy
           </p>
@@ -110,7 +110,7 @@ const AddPupil = () => {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
                 <div className="space-y-8">
                   <div className="border-b border-slate-200 pb-4">
-                    <h2 className="font-serif text-2xl font-semibold text-slate-800 mb-2">Personal Information</h2>
+                    <h2 className="[font-family:var(--font-inter)] text-2xl font-semibold text-slate-800 mb-2">Personal Information</h2>
                     <p className="font-sans text-slate-600">Basic details about the pupil</p>
                   </div>
 
@@ -121,7 +121,7 @@ const AddPupil = () => {
                       name="title"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Title</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Title</FormLabel>
                           <FormControl>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger className="h-12 rounded-xl border-slate-300 font-sans">
@@ -145,7 +145,7 @@ const AddPupil = () => {
                       name="gender"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Gender</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Gender</FormLabel>
                           <FormControl>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger className="h-12 rounded-xl border-slate-300 font-sans">
@@ -170,7 +170,7 @@ const AddPupil = () => {
                       name="forename"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Forename</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Forename</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter forename"
@@ -187,7 +187,7 @@ const AddPupil = () => {
                       name="surname"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Surname</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Surname</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter surname"
@@ -206,7 +206,7 @@ const AddPupil = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-serif text-base font-medium text-slate-700">Email Address</FormLabel>
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Email Address</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter email address"
@@ -224,7 +224,7 @@ const AddPupil = () => {
                     name="dob"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-serif text-base font-medium text-slate-700">Date of Birth</FormLabel>
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Date of Birth</FormLabel>
                         <FormControl>
                           <Popover open={dobOpen} onOpenChange={setDobOpen}>
                             <PopoverTrigger asChild>
@@ -259,7 +259,7 @@ const AddPupil = () => {
 
                 <div className="space-y-8">
                   <div className="border-b border-slate-200 pb-4">
-                    <h2 className="font-serif text-2xl font-semibold text-slate-800 mb-2">Contact Information</h2>
+                    <h2 className="[font-family:var(--font-inter)] text-2xl font-semibold text-slate-800 mb-2">Contact Information</h2>
                     <p className="font-sans text-slate-600">Phone numbers and communication preferences</p>
                   </div>
 
@@ -269,7 +269,7 @@ const AddPupil = () => {
                       name="home.mobile"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             Mobile Number
                           </FormLabel>
                           <FormControl>
@@ -288,7 +288,7 @@ const AddPupil = () => {
                       name="home.work"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Work Number</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Work Number</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Enter work number"
@@ -314,7 +314,7 @@ const AddPupil = () => {
                             className="rounded-md"
                           />
                         </FormControl>
-                        <FormLabel className="font-serif text-base font-medium text-slate-700 mb-0">
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700 mb-0">
                           Allow Text Messaging
                         </FormLabel>
                         <FormMessage />
@@ -325,13 +325,13 @@ const AddPupil = () => {
 
                 <div className="space-y-8">
                   <div className="border-b border-slate-200 pb-4">
-                    <h2 className="font-serif text-2xl font-semibold text-slate-800 mb-2">Address Information</h2>
+                    <h2 className="[font-family:var(--font-inter)] text-2xl font-semibold text-slate-800 mb-2">Address Information</h2>
                     <p className="font-sans text-slate-600">Pickup and home address details</p>
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 rounded-2xl p-6">
-                      <CardTitle className="font-serif text-lg font-semibold text-slate-800 mb-4 flex items-center">
+                      <CardTitle className="[font-family:var(--font-inter)] text-lg font-semibold text-slate-800 mb-4 flex items-center">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                         Pickup Address
                       </CardTitle>
@@ -341,7 +341,7 @@ const AddPupil = () => {
                           name="pickupAddress.postcode"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="font-serif text-sm font-medium text-slate-700">Postcode</FormLabel>
+                              <FormLabel className="[font-family:var(--font-inter)] text-sm font-medium text-slate-700">Postcode</FormLabel>
                               <FormControl>
                                 <Input
                                   placeholder="Postcode"
@@ -359,7 +359,7 @@ const AddPupil = () => {
                             name="pickupAddress.houseNo"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="font-serif text-sm font-medium text-slate-700">
+                                <FormLabel className="[font-family:var(--font-inter)] text-sm font-medium text-slate-700">
                                   House No.
                                 </FormLabel>
                                 <FormControl>
@@ -378,7 +378,7 @@ const AddPupil = () => {
                             name="pickupAddress.address"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="font-serif text-sm font-medium text-slate-700">Street</FormLabel>
+                                <FormLabel className="[font-family:var(--font-inter)] text-sm font-medium text-slate-700">Street</FormLabel>
                                 <FormControl>
                                   <Input
                                     placeholder="Street name"
@@ -395,7 +395,7 @@ const AddPupil = () => {
                     </Card>
 
                     <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 rounded-2xl p-6">
-                      <CardTitle className="font-serif text-lg font-semibold text-slate-800 mb-4 flex items-center">
+                      <CardTitle className="[font-family:var(--font-inter)] text-lg font-semibold text-slate-800 mb-4 flex items-center">
                         <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                         Home Address
                       </CardTitle>
@@ -405,7 +405,7 @@ const AddPupil = () => {
                           name="homeAddress.postcode"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="font-serif text-sm font-medium text-slate-700">Postcode</FormLabel>
+                              <FormLabel className="[font-family:var(--font-inter)] text-sm font-medium text-slate-700">Postcode</FormLabel>
                               <FormControl>
                                 <Input
                                   placeholder="Postcode"
@@ -423,7 +423,7 @@ const AddPupil = () => {
                             name="homeAddress.houseNo"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="font-serif text-sm font-medium text-slate-700">
+                                <FormLabel className="[font-family:var(--font-inter)] text-sm font-medium text-slate-700">
                                   House No.
                                 </FormLabel>
                                 <FormControl>
@@ -442,7 +442,7 @@ const AddPupil = () => {
                             name="homeAddress.address"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="font-serif text-sm font-medium text-slate-700">Street</FormLabel>
+                                <FormLabel className="[font-family:var(--font-inter)] text-sm font-medium text-slate-700">Street</FormLabel>
                                 <FormControl>
                                   <Input
                                     placeholder="Street name"
@@ -462,7 +462,7 @@ const AddPupil = () => {
 
                 <div className="space-y-8">
                   <div className="border-b border-slate-200 pb-4">
-                    <h2 className="font-serif text-2xl font-semibold text-slate-800 mb-2">Learning Details</h2>
+                    <h2 className="[font-family:var(--font-inter)] text-2xl font-semibold text-slate-800 mb-2">Learning Details</h2>
                     <p className="font-sans text-slate-600">Pupil type, instructor allocation, and preferences</p>
                   </div>
 
@@ -472,7 +472,7 @@ const AddPupil = () => {
                       name="pupilType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Pupil Type</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Pupil Type</FormLabel>
                           <FormControl>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <SelectTrigger className="h-12 rounded-xl border-slate-300 font-sans">
@@ -495,7 +495,7 @@ const AddPupil = () => {
                       name="pupilOwner"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Pupil Owner</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Pupil Owner</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Owner name"
@@ -515,7 +515,7 @@ const AddPupil = () => {
                       name="allocatedTo"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             Allocated To
                           </FormLabel>
                           <FormControl>
@@ -534,7 +534,7 @@ const AddPupil = () => {
                       name="usualAvailability"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             Usual Availability
                           </FormLabel>
                           <FormControl>
@@ -553,7 +553,7 @@ const AddPupil = () => {
 
                 <div className="space-y-8">
                   <div className="border-b border-slate-200 pb-4">
-                    <h2 className="font-serif text-2xl font-semibold text-slate-800 mb-2">License Information</h2>
+                    <h2 className="[font-family:var(--font-inter)] text-2xl font-semibold text-slate-800 mb-2">License Information</h2>
                     <p className="font-sans text-slate-600">Current license status and theory test details</p>
                   </div>
 
@@ -563,7 +563,7 @@ const AddPupil = () => {
                       name="licenseType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             License Type
                           </FormLabel>
                           <FormControl>
@@ -587,7 +587,7 @@ const AddPupil = () => {
                       name="licenseNo"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             License Number
                           </FormLabel>
                           <FormControl>
@@ -609,7 +609,7 @@ const AddPupil = () => {
                       name="certNo"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             Theory Certificate Number
                           </FormLabel>
                           <FormControl>
@@ -628,7 +628,7 @@ const AddPupil = () => {
                       name="datePassed"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             Theory Test Date Passed
                           </FormLabel>
                           <FormControl>
@@ -675,7 +675,7 @@ const AddPupil = () => {
                             className="rounded-md"
                           />
                         </FormControl>
-                        <FormLabel className="font-serif text-base font-medium text-slate-700 mb-0">
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700 mb-0">
                           Has Passed Theory Test
                         </FormLabel>
                         <FormMessage />
@@ -686,7 +686,7 @@ const AddPupil = () => {
 
                 <div className="space-y-8">
                   <div className="border-b border-slate-200 pb-4">
-                    <h2 className="font-serif text-2xl font-semibold text-slate-800 mb-2">Additional Settings</h2>
+                    <h2 className="[font-family:var(--font-inter)] text-2xl font-semibold text-slate-800 mb-2">Additional Settings</h2>
                     <p className="font-sans text-slate-600">Pricing, access permissions, and special requirements</p>
                   </div>
 
@@ -696,7 +696,7 @@ const AddPupil = () => {
                       name="discount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">Discount</FormLabel>
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">Discount</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="e.g., 10%"
@@ -713,7 +713,7 @@ const AddPupil = () => {
                       name="defaultProduct"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                             Default Product
                           </FormLabel>
                           <FormControl>
@@ -734,7 +734,7 @@ const AddPupil = () => {
                     name="onlinePassword"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-serif text-base font-medium text-slate-700">
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                           Online Portal Password
                         </FormLabel>
                         <FormControl>
@@ -763,7 +763,7 @@ const AddPupil = () => {
                               className="rounded-md"
                             />
                           </FormControl>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700 mb-0">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700 mb-0">
                             FOTT (First Time Driver)
                           </FormLabel>
                           <FormMessage />
@@ -782,7 +782,7 @@ const AddPupil = () => {
                               className="rounded-md"
                             />
                           </FormControl>
-                          <FormLabel className="font-serif text-base font-medium text-slate-700 mb-0">
+                          <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700 mb-0">
                             Full System Access
                           </FormLabel>
                           <FormMessage />
@@ -803,7 +803,7 @@ const AddPupil = () => {
                             className="rounded-md border-amber-400"
                           />
                         </FormControl>
-                        <FormLabel className="font-serif text-base font-medium text-amber-800 mb-0">
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-amber-800 mb-0">
                           Pupil Requires Special Attention
                         </FormLabel>
                         <FormMessage />
@@ -816,7 +816,7 @@ const AddPupil = () => {
                     name="notes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-serif text-base font-medium text-slate-700">
+                        <FormLabel className="[font-family:var(--font-inter)] text-base font-medium text-slate-700">
                           Additional Notes
                         </FormLabel>
                         <FormControl>
@@ -835,7 +835,7 @@ const AddPupil = () => {
                 <div className="pt-8">
                   <Button
                     type="submit"
-                    className="w-full h-14 bg-gradient-to-r from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-white font-serif text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full h-14 bg-gradient-to-r from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-white [font-family:var(--font-inter)] text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
                     disabled={pupilMutation.isPending}
                   >
                     {pupilMutation.isPending ? (
@@ -862,7 +862,7 @@ const AddPupil = () => {
               <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                 <CheckCircleIcon className="text-green-600 w-8 h-8" />
               </div>
-              <DialogTitle className="font-serif text-2xl font-bold text-slate-800">
+              <DialogTitle className="[font-family:var(--font-inter)] text-2xl font-bold text-slate-800">
                 Pupil Created Successfully
               </DialogTitle>
               <DialogDescription className="font-sans text-slate-600 text-base">
@@ -872,7 +872,7 @@ const AddPupil = () => {
             <DialogFooter className="flex justify-center mt-6">
               <Button
                 onClick={() => setSuccessOpen(false)}
-                className="px-8 py-3 bg-slate-800 hover:bg-slate-700 text-white font-serif rounded-xl"
+                className="px-8 py-3 bg-slate-800 hover:bg-slate-700 text-white [font-family:var(--font-inter)] rounded-xl"
               >
                 Continue
               </Button>

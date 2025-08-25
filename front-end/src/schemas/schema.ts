@@ -22,13 +22,15 @@ export const pupilSchema = z.object({
 
   // Contact Information
   home: z.object({
-    mobile: z.string().refine((val) => phoneRegex.test(val), {
-      message: "Enter a valid number",
-    }),
+    mobile: z.string()
+      .min(1, { message: "Work number is required" })
+      .regex(phoneRegex, {
+        message: "Invalid work number format",
+      }),
     work: z
       .string()
       .min(1, { message: "Work number is required" })
-      .refine((val) => phoneRegex.test(val), {
+      .regex(phoneRegex, {
         message: "Invalid work number format",
       }),
   }),

@@ -49,13 +49,13 @@ const DetailItem = ({
   const displayValue = value === undefined || value === null || value === "" ? "-" : String(value)
 
   return (
-    <div className="group flex items-center space-x-4 pt-16 p-4 rounded-xl border border-transparent hover:border-border/50 hover:bg-muted/30 transition-all duration-300">
+    <div className="group flex items-center space-x-4 p-4 rounded-xl border border-transparent hover:border-border/50 hover:bg-muted/30 transition-all duration-300">
       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 flex-shrink-0">
         <Icon className="h-5 w-5 text-primary" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-muted-foreground font-serif mb-1">{label}</div>
-        <div className="text-base font-semibold text-foreground font-sans truncate">{children || displayValue}</div>
+        <div className="text-sm font-medium text-muted-foreground [font-family:var(--font-inter)] mb-1">{label}</div>
+        <div className="text-base font-semibold text-foreground [font-family:var(--font-inter)] truncate">{children || displayValue}</div>
       </div>
     </div>
   )
@@ -103,35 +103,35 @@ const ViewPupil: React.FC = () => {
 
   return (
     <div className="pt-16 min-h-screen bg-gradient-to-br from-background via-background to-muted/20 overflow-auto">
-      <div className="container mx-auto px-6 py-8 max-w-6xl">
+      <div className="container mx-auto px-6 py-8 max-w-3xl">
         <div className="mb-10 flex-shrink-0 text-center">
           <div className="flex flex-col items-center gap-8 mb-8">
             <div className="flex flex-col items-center gap-6">
               <div className="relative">
                 <Avatar className="h-24 w-24 ring-4 ring-primary/10">
                   <AvatarImage />
-                  <AvatarFallback className="text-3xl font-bold bg-primary/10 text-primary font-serif">
+                  <AvatarFallback className="text-3xl font-bold bg-primary/10 text-primary [font-family:var(--font-inter)]">
                     {pupilInitials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-green-500 rounded-full border-3 border-background"></div>
               </div>
               <div className="space-y-3 text-center">
-                <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text font-serif">
+                <h1 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text [font-family:var(--font-inter)]">
                   {pupil.forename} {pupil.surname}
                 </h1>
                 <div className="flex items-center justify-center gap-3 text-muted-foreground">
                   <div className="flex items-center justify-center w-5 h-5 rounded-full bg-muted">
                     <Mail className="h-3 w-3" />
                   </div>
-                  <span className="font-medium text-base font-sans">{pupil.email || "No email provided"}</span>
+                  <span className="font-medium text-base [font-family:var(--font-inter)]">{pupil.email || "No email provided"}</span>
                 </div>
               </div>
             </div>
             <Button
               variant="outline"
               onClick={() => navigate("/pupils")}
-              className="shadow-sm hover:shadow-md transition-all duration-300 px-6 py-3 font-medium font-sans"
+              className="shadow-sm px-6 py-3 font-medium [font-family:var(--font-inter)]"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Pupils
@@ -145,14 +145,14 @@ const ViewPupil: React.FC = () => {
           <div className="w-full max-w-5xl mx-auto">
             <Tabs defaultValue="personal" className="space-y-8">
               <div className="flex justify-center">
-                <TabsList className="grid grid-cols-3 h-14 bg-muted/50 p-1.5 flex-shrink-0 w-full max-w-lg rounded-xl">
-                  <TabsTrigger value="personal" className="font-medium text-base font-serif rounded-lg">
+                <TabsList className="h-14 p-1.5 w-full max-w-3xl rounded-xl">
+                  <TabsTrigger value="personal" className="font-medium text-base [font-family:var(--font-inter)] rounded-lg">
                     Personal
                   </TabsTrigger>
-                  <TabsTrigger value="contact" className="font-medium text-base font-serif rounded-lg">
+                  <TabsTrigger value="contact" className="font-medium text-base [font-family:var(--font-inter)] rounded-lg">
                     Contact & Address
                   </TabsTrigger>
-                  <TabsTrigger value="license" className="font-medium text-base font-serif rounded-lg">
+                  <TabsTrigger value="license" className="font-medium text-base [font-family:var(--font-inter)] rounded-lg">
                     License & Notes
                   </TabsTrigger>
                 </TabsList>
@@ -161,8 +161,8 @@ const ViewPupil: React.FC = () => {
               <div className="flex-1">
                 <TabsContent value="personal" className="h-full">
                   <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-card/50 backdrop-blur-sm rounded-2xl">
-                    <CardHeader className="pb-6">
-                      <CardTitle className="flex items-center gap-3 text-2xl font-serif">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-3 text-2xl [font-family:var(--font-inter)]">
                         <div className="w-3 h-3 bg-primary rounded-full"></div>
                         Personal Details
                       </CardTitle>
@@ -187,7 +187,7 @@ const ViewPupil: React.FC = () => {
                 <TabsContent value="contact" className="h-full">
                   <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-card/50 backdrop-blur-sm h-full rounded-2xl">
                     <CardHeader className="pb-6">
-                      <CardTitle className="flex items-center gap-3 text-2xl font-serif">
+                      <CardTitle className="flex items-center gap-3 text-2xl [font-family:var(--font-inter)]">
                         <div className="w-3 h-3 bg-primary rounded-full"></div>
                         Contact & Address
                       </CardTitle>
@@ -195,7 +195,7 @@ const ViewPupil: React.FC = () => {
                     <CardContent className="space-y-10 flex-1 flex flex-col justify-between px-8 pb-8">
                       <div className="space-y-10 w-full">
                         <div>
-                          <h3 className="font-semibold text-xl mb-6 flex items-center gap-3 font-serif">
+                          <h3 className="font-semibold text-xl mb-6 flex items-center gap-3 [font-family:var(--font-inter)]">
                             <Phone className="h-5 w-5 text-primary" />
                             Phone Numbers
                           </h3>
@@ -208,13 +208,13 @@ const ViewPupil: React.FC = () => {
                         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
 
                         <div>
-                          <h3 className="font-semibold text-xl mb-6 flex items-center gap-3 font-serif">
+                          <h3 className="font-semibold text-xl mb-6 flex items-center gap-3 [font-family:var(--font-inter)]">
                             <Home className="h-5 w-5 text-primary" />
                             Addresses
                           </h3>
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             <div className="space-y-6">
-                              <h4 className="font-medium text-lg text-muted-foreground border-b pb-3 font-serif">
+                              <h4 className="font-medium text-lg text-muted-foreground border-b pb-3 [font-family:var(--font-inter)]">
                                 Pickup Address
                               </h4>
                               <div className="space-y-4">
@@ -224,7 +224,7 @@ const ViewPupil: React.FC = () => {
                               </div>
                             </div>
                             <div className="space-y-6">
-                              <h4 className="font-medium text-lg text-muted-foreground border-b pb-3 font-serif">
+                              <h4 className="font-medium text-lg text-muted-foreground border-b pb-3 [font-family:var(--font-inter)]">
                                 Home Address
                               </h4>
                               <div className="space-y-4">
@@ -244,7 +244,7 @@ const ViewPupil: React.FC = () => {
                 <TabsContent value="license" className="h-full">
                   <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-card/50 backdrop-blur-sm rounded-2xl">
                     <CardHeader className="pb-6">
-                      <CardTitle className="flex items-center gap-3 text-2xl font-serif">
+                      <CardTitle className="flex items-center gap-3 text-2xl [font-family:var(--font-inter)]">
                         <div className="w-3 h-3 bg-primary rounded-full"></div>
                         License & Other Details
                       </CardTitle>
@@ -280,7 +280,7 @@ const ViewPupil: React.FC = () => {
           <div className="w-full max-w-5xl mx-auto">
             <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border-0 bg-card/50 backdrop-blur-sm rounded-2xl">
               <CardHeader className="pb-6">
-                <CardTitle className="flex items-center gap-3 text-2xl font-serif">
+                <CardTitle className="flex items-center gap-3 text-2xl [font-family:var(--font-inter)]">
                   <div className="w-3 h-3 bg-primary rounded-full"></div>
                   Key Information
                 </CardTitle>
@@ -292,9 +292,9 @@ const ViewPupil: React.FC = () => {
                       <Info className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-muted-foreground font-serif mb-1">Pupil Type</div>
+                      <div className="text-sm font-medium text-muted-foreground [font-family:var(--font-inter)] mb-1">Pupil Type</div>
                       <div className="text-base font-semibold text-foreground">
-                        <Badge variant="secondary" className="font-medium text-sm font-sans">
+                        <Badge variant="secondary" className="font-medium text-sm [font-family:var(--font-inter)]">
                           {pupil.pupilType || "-"}
                         </Badge>
                       </div>
@@ -306,9 +306,9 @@ const ViewPupil: React.FC = () => {
                       <Car className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-muted-foreground font-serif mb-1">License Type</div>
+                      <div className="text-sm font-medium text-muted-foreground [font-family:var(--font-inter)] mb-1">License Type</div>
                       <div className="text-base font-semibold text-foreground">
-                        <Badge className="font-medium text-sm font-sans">{pupil.licenseType || "-"}</Badge>
+                        <Badge className="font-medium text-sm [font-family:var(--font-inter)]">{pupil.licenseType || "-"}</Badge>
                       </div>
                     </div>
                   </div>
@@ -318,14 +318,14 @@ const ViewPupil: React.FC = () => {
                       <BookOpen className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-muted-foreground font-serif mb-1">Theory Status</div>
+                      <div className="text-sm font-medium text-muted-foreground [font-family:var(--font-inter)] mb-1">Theory Status</div>
                       <div className="text-base font-semibold text-foreground">
                         {pupil.passedTheory ? (
-                          <Badge variant="default" className="bg-green-500 hover:bg-green-600 text-sm font-sans">
+                          <Badge variant="default" className="bg-green-500 hover:bg-green-600 text-sm [font-family:var(--font-inter)]">
                             <CheckCircle2 className="h-4 w-4 mr-1" /> Passed
                           </Badge>
                         ) : (
-                          <Badge variant="destructive" className="text-sm font-sans">
+                          <Badge variant="destructive" className="text-sm [font-family:var(--font-inter)]">
                             <XCircle className="h-4 w-4 mr-1" /> Not Passed
                           </Badge>
                         )}
@@ -341,8 +341,8 @@ const ViewPupil: React.FC = () => {
                   <div className="mt-8">
                     <Alert variant="destructive" className="border-destructive/20 bg-destructive/5 rounded-xl">
                       <Siren className="h-5 w-5" />
-                      <AlertTitle className="font-semibold text-base font-serif">Pupil Caution</AlertTitle>
-                      <AlertDescription className="mt-2 font-medium text-base font-sans">
+                      <AlertTitle className="font-semibold text-base [font-family:var(--font-inter)]">Pupil Caution</AlertTitle>
+                      <AlertDescription className="mt-2 font-medium text-base [font-family:var(--font-inter)]">
                         {pupil.pupilCaution}
                       </AlertDescription>
                     </Alert>

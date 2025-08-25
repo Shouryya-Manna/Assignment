@@ -16,7 +16,7 @@ function ListPupil() {
               <Users className="h-8 w-8 text-indigo-600" />
             </div>
             <div className="space-y-1">
-              <CardTitle className="text-3xl font-serif font-bold text-slate-800">Pupils Directory</CardTitle>
+              <CardTitle className="text-3xl [font-family:var(--font-inter)] font-bold text-slate-800">Pupils Directory</CardTitle>
               <CardDescription className="text-lg text-slate-600 font-sans">
                 Comprehensive management of all registered pupils
               </CardDescription>
@@ -38,7 +38,7 @@ function ListPupil() {
                 <Users className="h-8 w-8 text-red-500" />
               </div>
               <div className="text-center">
-                <h3 className="text-xl font-serif font-semibold text-red-600 mb-2">Unable to Load Data</h3>
+                <h3 className="text-xl [font-family:var(--font-inter)] font-semibold text-red-600 mb-2">Unable to Load Data</h3>
                 <p className="text-slate-600 font-sans">Failed to fetch pupil information. Please try again later.</p>
               </div>
             </div>
@@ -46,7 +46,7 @@ function ListPupil() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <h3 className="text-xl font-serif font-semibold text-slate-800">All Pupils</h3>
+                  <h3 className="text-xl [font-family:var(--font-inter)] font-semibold text-slate-800">All Pupils</h3>
                   <p className="text-sm font-sans text-slate-600">{pupils?.data?.length || 0} pupils registered</p>
                 </div>
               </div>
@@ -59,6 +59,7 @@ function ListPupil() {
         </CardContent>
       </Card>
     </div>
+
   )
 }
 

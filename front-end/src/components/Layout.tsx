@@ -4,59 +4,73 @@ import React from "react";
 
 function Layout() {
   return (
-    <div className="">
+    <div className="min-h-screen flex flex-col">
       {/* Glassy Menubar */}
-      <div className="fixed w-full top-0 z-50">
+      <header className="fixed w-full top-0 z-50">
         <Menubar
-          className="flex justify-center items-center
-            rounded-none w-full h-12
-            border-b border-white/20 
-            bg-white/30 backdrop-blur-md 
-            transition-all duration-300
-          "
+          className="flex justify-center items-center 
+                     h-12 px-4
+                     bg-white/30 backdrop-blur-md 
+                     border-b border-white/20
+                     transition-all duration-300"
         >
-          {/* Dashboard */}
-          <MenubarMenu>
-            <MenubarTrigger>
-              <Link
-                to="/"
-                className="px-3 py-1.5 rounded hover:bg-white/50 hover: transition transform duration-200"
-              >
-                Dashboard 
-              </Link>
-            </MenubarTrigger>
-          </MenubarMenu>
+          {/* Flex wrapper ensures equal width */}
+          <div className="flex w-full max-w-md">
+            {/* Dashboard */}
+            <div className="flex-1">
+              <MenubarMenu>
+                <MenubarTrigger asChild>
+                  <Link
+                    to="/"
+                    className="w-full text-center px-3 py-1.5 rounded-md 
+                               hover:bg-white/50 transition-colors duration-200
+                               flex items-center justify-center"
+                  >
+                    Dashboard
+                  </Link>
+                </MenubarTrigger>
+              </MenubarMenu>
+            </div>
 
-          {/* Pupils */}
-          <MenubarMenu>
-            <MenubarTrigger>
-              <Link
-                to="/pupils"
-                className="px-4 py-1.5 rounded hover:bg-white/50 hover: transition transform duration-200"
-              >
-                Pupils
-              </Link>
-            </MenubarTrigger>
-          </MenubarMenu>
+            {/* Pupils */}
+            <div className="flex-1">
+              <MenubarMenu>
+                <MenubarTrigger asChild>
+                  <Link
+                    to="/pupils"
+                    className="w-full text-center px-3 py-1.5 rounded-md 
+                               hover:bg-white/50 transition-colors duration-200
+                               flex items-center justify-center"
+                  >
+                    Pupils
+                  </Link>
+                </MenubarTrigger>
+              </MenubarMenu>
+            </div>
 
-          {/* Add */}
-          <MenubarMenu>
-            <MenubarTrigger>
-              <Link
-                to="/pupils/add"
-                className="px-5 py-1.5 rounded hover:bg-white/50 hover: transition transform duration-200"
-              >
-                Add
-              </Link>
-            </MenubarTrigger>
-          </MenubarMenu>
+            {/* Add */}
+            <div className="flex-1">
+              <MenubarMenu>
+                <MenubarTrigger asChild>
+                  <Link
+                    to="/pupils/add"
+                    className="w-full text-center px-3 py-1.5 rounded-md 
+                               hover:bg-white/50 transition-colors duration-200
+                               flex items-center justify-center"
+                  >
+                    Add
+                  </Link>
+                </MenubarTrigger>
+              </MenubarMenu>
+            </div>
+          </div>
         </Menubar>
-      </div>
+      </header>
 
       {/* Page content */}
-      <div className="">
+      <main className="flex-1 pt-12">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 }

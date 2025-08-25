@@ -1,122 +1,68 @@
-// src/pages/Dashboard.tsx
-import {
-  TypographyH1,
-  TypographySmall,
-  TypographyH2,
-  TypographyP,
-} from "../components/Typography";
+import React from "react";
+import F1Image from "../assets/2019-F1-car-1.jpeg";
 
 function Dashboard() {
   return (
-    <div className="min-h-screen w-full  flex flex-col overflow-hidden pt-30">
-      {/* Smooth random gradient background */}
-      <div className="absolute inset-0 z-0 animated-gradient"></div>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-8">
+      {/* Hero Section */}
+      <header className="text-center max-w-3xl mb-10">
+        <h1 className="text-5xl font-extrabold tracking-tight text-gray-800 mb-4">
+          Driving School Dashboard
+        </h1>
+        <p className="text-lg text-gray-600 leading-relaxed">
+          Welcome to the <span className="font-semibold text-gray-800">Driving School Management System</span>. 
+          This is your one-stop solution to manage students, track courses, monitor instructors, 
+          and keep your driving academy running smoothly. 
+        </p>
+      </header>
 
-      {/* Glassy overlay */}
-      <div className="absolute inset-0 bg-white/10 backdrop-blur-md z-10"></div>
+      {/* Hero Image */}
+      <img
+        src={F1Image}
+        alt="Formula 1 Car"
+        className="w-full max-w-5xl rounded-2xl shadow-xl mb-12"
+      />
 
-      {/* Content */}
-      <div className="relative z-20 flex flex-col items-center justify-start gap-8 p-12 text-center text-white">
-        {/* Typewriter heading */}
-        <TypographyH1
-          className="text-9xl md:text-6xl font-extrabold typewriter"
-          style={{ fontFamily: "'Roboto Mono', monospace" }}
-        >
-          <span className="inline-block">Welcome to Driving School</span>
-        </TypographyH1>
-
-        {/* Small description with fade-in */}
-        <TypographySmall className="text-lg md:text-xl coder-fadein">
-          Your journey to safe and confident driving starts here
-        </TypographySmall>
-
-        {/* Paragraph */}
-        <TypographyP className="max-w-3xl text-white/90 text-lg coder-fadein text-justify">
-          Driving School offers professional driving lessons for beginners
-          and experienced drivers alike. With highly trained instructors,
-          flexible schedules, and a focus on safety, we ensure every student
-          learns to drive with confidence. Explore our programs and accelerate
-          your driving journey today!
-        </TypographyP>
-
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 w-full max-w-5xl">
-          <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 shadow-lg hover:scale-105 transition-transform duration-300 coder-fadein">
-            <TypographyH2 className="text-white font-poppins">
-              Total Students
-            </TypographyH2>
-            <TypographyP className="text-white/90 text-lg font-roboto-mono">
-              120
-            </TypographyP>
-          </div>
-
-          <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 shadow-lg hover:scale-105 transition-transform duration-300 coder-fadein">
-            <TypographyH2 className="text-white font-poppins">
-              Active Classes
-            </TypographyH2>
-            <TypographyP className="text-white/90 text-lg font-roboto-mono">
-              8
-            </TypographyP>
-          </div>
-
-          <div className="bg-white/20 backdrop-blur-md rounded-xl p-6 shadow-lg hover:scale-105 transition-transform duration-300 coder-fadein">
-            <TypographyH2 className="text-white font-poppins">
-              Pending Tasks
-            </TypographyH2>
-            <TypographyP className="text-white/90 text-lg font-roboto-mono">
-              15
-            </TypographyP>
-          </div>
+      {/* Stats Section */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl mb-12">
+        <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl transition">
+          <h2 className="text-3xl font-bold text-gray-800">120+</h2>
+          <p className="text-gray-500 mt-2">Active Students</p>
+          <p className="text-sm text-gray-400 mt-1">
+            Enrolled across different driving programs.
+          </p>
         </div>
-      </div>
+        <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl transition">
+          <h2 className="text-3xl font-bold text-gray-800">8</h2>
+          <p className="text-gray-500 mt-2">Courses Offered</p>
+          <p className="text-sm text-gray-400 mt-1">
+            Covering beginner to advanced driving levels.
+          </p>
+        </div>
+        <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl transition">
+          <h2 className="text-3xl font-bold text-gray-800">5</h2>
+          <p className="text-gray-500 mt-2">Professional Instructors</p>
+          <p className="text-sm text-gray-400 mt-1">
+            Certified and experienced driving trainers.
+          </p>
+        </div>
+      </section>
 
-      <style>
-        {`
-          /* Dynamic smooth gradient animation */
-          .animated-gradient {
-            background: linear-gradient(45deg, #667eea, #764ba2, #6b73ff, #ff758c, #ff7eb3);
-            background-size: 400% 400%;
-            animation: gradientFlow 60s ease infinite;
-          }
-
-          @keyframes gradientFlow {
-            0% { background-position: 0% 50%; }
-            25% { background-position: 50% 100%; }
-            50% { background-position: 100% 50%; }
-            75% { background-position: 50% 0%; }
-            100% { background-position: 0% 50%; }
-          }
-
-          /* Typewriter effect limited to text width */
-          .typewriter span {
-            display: inline-block;
-            overflow: hidden;
-            border-right: 0.15em solid #fff;
-            white-space: nowrap;
-            animation: typing 1.25s steps(30, end), blink-caret 0.75s step-end infinite;
-          }
-
-          @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-          }
-
-          @keyframes blink-caret {
-            50% { border-color: transparent; }
-          }
-
-          /* Coder fade-in effect */
-          .coder-fadein {
-            opacity: 0;
-            animation: coderFadeIn 2s ease forwards;
-          }
-
-          @keyframes coderFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-        `}
-      </style>
+      {/* Additional Info Section */}
+      <section className="max-w-4xl text-center">
+        <h3 className="text-2xl font-semibold text-gray-800 mb-3">
+          Learn with the Best
+        </h3>
+        <p className="text-gray-600 leading-relaxed">
+          Our driving school provides the latest training curriculum with highly experienced instructors, 
+          well-maintained vehicles, and flexible schedules. Whether you're a beginner or looking 
+          to improve your driving skills, we have a tailored program just for you.
+        </p>
+        <p className="text-gray-600 mt-4 leading-relaxed">
+          Stay updated with your course progress, access important resources, and track your practice 
+          sessions directly from this dashboard.
+        </p>
+      </section>
     </div>
   );
 }
